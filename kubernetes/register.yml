@@ -1,0 +1,23 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: dccn-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dccn-test
+  template:
+    metadata:
+      labels:
+        app: dccn-test
+    spec:
+        containers:
+        - name: dccn-test
+          image: dccn-test-all
+          imagePullPolicy: Always
+          command: [ "/test-all" ]
+          env:
+          - name: API_ADDRESS
+            value: api:50051
+#            value: client-dev.dccn.ankr.network:50051
