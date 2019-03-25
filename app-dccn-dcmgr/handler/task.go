@@ -8,6 +8,6 @@ import (
 
 func (p *DcMgrHandler) UpdateTask(stream *common_proto.DCStream) error {
 
-	log.Printf("into updateTask from datacenter msg  : %v ", stream)
+	log.Printf("into updateTask from dc facade msg  : %v ", stream)
 	return p.taskFeedback.Publish(context.TODO(), stream)
 }

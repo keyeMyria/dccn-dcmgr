@@ -16,15 +16,9 @@
 
 [[projects]]
   branch = "develop"
-  digest = "1:20ee312f65ca7b973819f68be5b23330c81ae5ee64ea8144c405fa4bc72a3afc"
+  digest = "1:e6578d4c1eef2d960cc2bcf21ab3f23939fb93cf5e7b5837f79bd83e726b12cd"
   name = "github.com/Ankr-network/dccn-hub"
-  packages = [
-    "app-dccn-dcmgr/config",
-    "app-dccn-dcmgr/db_service",
-    "app-dccn-dcmgr/examples/common",
-    "app-dccn-dcmgr/handler",
-    "app-dccn-dcmgr/subscriber",
-  ]
+  packages = ["app-dccn-dcmgr/examples/common"]
   pruneopts = "UT"
   revision = "de4978f0fd200ba443e7291ad6114dcaaefeadfb"
 
@@ -62,12 +56,12 @@
   version = "v1.3.1"
 
 [[projects]]
-  branch = "master"
   digest = "1:0bfbe13936953a98ae3cfe8ed6670d396ad81edf069a806d2f6515d7bb6950df"
   name = "github.com/google/btree"
   packages = ["."]
   pruneopts = "UT"
   revision = "4030bb1f1f0c35b30ca7009e9ebd06849dd45306"
+  version = "v1.0.0"
 
 [[projects]]
   digest = "1:582b704bebaa06b48c29b0cec224a6058a09c86883aaddabde889cd1a5f73e1b"
@@ -78,15 +72,15 @@
   version = "v1.1.1"
 
 [[projects]]
-  digest = "1:dd7bfec7e8faae9df2bf212cc3c6fec6172912f335c1e247531d31890c1bd9e6"
+  digest = "1:7fac5965d8ceb1b8805e0356e497809af6ccdf57608003c9133aba676ebe982e"
   name = "github.com/hashicorp/consul"
   packages = [
     "api",
     "watch",
   ]
   pruneopts = "UT"
-  revision = "567e41ff6b096a478333c804d5c18264050bc3f8"
-  version = "v1.4.3"
+  revision = "ea5210a30e154f4da9a4c8e729b45b8ce7b9b92c"
+  version = "v1.4.4"
 
 [[projects]]
   digest = "1:0ade334594e69404d80d9d323445d2297ff8161637f9b2d347cc6973d2d6f05b"
@@ -398,7 +392,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "1272bf9dcd53ea65c09668fb4c76e65deb740072"
+  revision = "addf6b3196f61cd44ce5a76657913698c73479d0"
 
 [[projects]]
   branch = "master"
@@ -406,7 +400,7 @@
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "6c81ef8f67ca3f42fc9cd71dfbd5f35b0c4b5771"
+  revision = "f49334f85ddcf0f08d7fb6dd7363e9e6d6b777eb"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -437,7 +431,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "5fe7a883aa19554f42890211544aa549836af7b7"
+  revision = "e79c0c59cdb5e117ef82a6f885294df3d74065d5"
 
 [[projects]]
   digest = "1:c00eb80d7b152379c3e94c38d82b29deca98b1d0f53e4e20362589b7fcbffa07"
@@ -501,11 +495,7 @@
     "github.com/Ankr-network/dccn-common/protos",
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
-    "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/config",
-    "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/db_service",
     "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/examples/common",
-    "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/handler",
-    "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/subscriber",
     "github.com/google/uuid",
     "github.com/micro/go-grpc",
     "github.com/micro/go-micro",

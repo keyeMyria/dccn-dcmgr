@@ -3,11 +3,12 @@ package subscriber
 import (
 	"context"
 	"log"
+	"runtime/debug"
 
 	ankr_default "github.com/Ankr-network/dccn-common/protos"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/handler"
+	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/handler"
 )
 
 type Subscriber struct {
@@ -23,6 +24,7 @@ func New(c *handler.DataCenterStreamCaches, ) *Subscriber {
 // UpdateTaskStatusByFeedback updates database status by performing feedback from the data center of the task.
 // sets executor's id, updates task status.
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *common_proto.DCStream) error {
+	debug.PrintStack()
 
 	task := req.GetTask()
 	log.Printf("dc manager service(hub) HandlerDeployEvnetFromTaskMgr: Receive New Event: %+v", *task)

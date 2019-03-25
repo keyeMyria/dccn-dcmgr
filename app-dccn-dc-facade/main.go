@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/handler"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/subscriber"
+	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/handler"
+	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/subscriber"
 	"log"
 
 	"github.com/micro/go-micro"

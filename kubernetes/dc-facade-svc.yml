@@ -1,0 +1,14 @@
+dc-facadeVersion: v1
+kind: Service
+metadata:
+  name: dc-facade
+  labels:
+    app: dc-facade
+spec:
+  ports:
+    - port: 50051
+      targetPort: 50051
+      protocol: TCP
+  selector:
+    app: dc-facade
+  type: LoadBalancer

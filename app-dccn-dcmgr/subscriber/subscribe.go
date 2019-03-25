@@ -46,7 +46,7 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, re
 	//	log.Println(ankr_default.ErrUnknown.Error())
 	//	return ankr_default.ErrUnknown
 	//}
-	p.dcFacadeDeploy.Publish(context.TODO(), task)
+	p.dcFacadeDeploy.Publish(context.TODO(), req)
 	log.Printf("send message to DC Facade  %+v", *task)
 
 	return nil
