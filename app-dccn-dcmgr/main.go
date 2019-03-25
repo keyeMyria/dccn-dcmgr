@@ -77,8 +77,7 @@ func startHandler() {
 	if err := micro.RegisterSubscriber("FromDCFacadeToDCMgr", srv.Server(), subscriber.NewEventFromDCFacade(dcHandler.DcStreamCaches, dcHandler)); err != nil {
 		log.Fatal(err.Error())
 	}
-
-
+	
 
 	//defer dcHandler.Cleanup()
 
