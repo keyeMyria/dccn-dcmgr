@@ -31,11 +31,6 @@ jobs:
             chmod +x ./kubectl
             sudo mv ./kubectl /usr/local/bin/kubectl
       - run:
-          name: patch k8s yaml for email
-          command: |
-            kubectl set env deployment/email AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --local -f kubernetes/email.yml -o yaml > kubernetes/email_patch.yml
-            mv kubernetes/email_patch.yml kubernetes/email.yml
-      - run:
           name: "Build & Push Docker Image"
           command: |
             set -x
