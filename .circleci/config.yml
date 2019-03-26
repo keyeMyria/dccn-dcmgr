@@ -66,7 +66,7 @@ jobs:
             echo "Getting all dependency"
             docker build --no-cache -f dockerfile/dep.Dockerfile  -t dccn-hub-dep:latest .
             docker create -ti --name dccn-hub-dep-container dccn-hub-dep bash
-            docker cp dccn-hub-dep-container:/go/src/github.com/Ankr-network/dccn-hub/vendor ./
+            docker cp dccn-hub-dep-container:/go/src/github.com/Ankr-network/dccn-dcmgr/vendor ./
             docker rm -fv dccn-hub-dep-container
 
             for((i=0; i<arrlen; i++)); do
