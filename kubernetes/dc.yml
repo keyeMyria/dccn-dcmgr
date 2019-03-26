@@ -13,8 +13,8 @@ spec:
         app: dcmgr
     spec:
         containers:
-        - name: app-dccn-dcmgr
-          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-hub-dcmgr:feat
+        - name: dccn-dcmgr
+          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dcmgr:feat
           imagePullPolicy: Always
           command: [ "/dcmgr" ]
           env:
@@ -41,6 +41,6 @@ spec:
           - name: MICRO_REGISTRY_ADDRESS
             value: consul:8500
           - name: MICRO_SERVER_ADDRESS
-            value: :50051  
+            value: :50051
           - name: MICRO_SERVER_VERSION
             value: v1.0
