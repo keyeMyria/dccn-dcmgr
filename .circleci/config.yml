@@ -77,7 +77,7 @@ jobs:
               done
             done
             declare -a deployment_arr=("dcmgr" "dc-facade" )
-            declare -a name_arr=("dccn-dcmgr", "dccn-dc-facade" )
+            declare -a name_arr=("dccn-dcmgr" "dccn-dc-facade" )
 
             kops export kubecfg --name ${K8S_CLUSTER}.k8s.ankr.network --state s3://kops.${K8S_CLUSTER}.config
             for ((i=0; i<arrlen; i++)); do
