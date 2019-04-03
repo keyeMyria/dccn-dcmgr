@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"context"
+	"golang.org/x/net/context"
 	"encoding/json"
-	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro"
+	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/db_service"
 	"log"
@@ -21,30 +21,30 @@ func NewAPIHandler(db dbservice.DBService) *DcMgrAPIHandler {
 }
 
 func (p *DcMgrAPIHandler) DataCenterList(
-	ctx context.Context, req *common_proto.Empty, rsp *dcmgr.DataCenterListResponse) error {
+	ctx context.Context, req *common_proto.Empty)( *dcmgr.DataCenterListResponse, error) {
 	//
 	log.Println("api service receive DataCenterList from client")
 
 	if list, err :=  p.db.GetAll(); err != nil {
 		log.Println(err.Error())
 		log.Println("DataCenterList failure")
-		return err
+		return nil, err
 	} else {
 		log.Printf("DataCenterList successfully count: %d", len(*list))
+		rsp := dcmgr.DataCenterListResponse{}
 		rsp.DcList = *list
+		return &rsp, nil
 	}
-	return nil
 }
 
 
-func (p *DcMgrAPIHandler) DataCenterLeaderBoard(ctx context.Context, req *common_proto.Empty,
-	                              rsp *dcmgr.DataCenterLeaderBoardResponse ) error {
+func (p *DcMgrAPIHandler) DataCenterLeaderBoard(ctx context.Context, req *common_proto.Empty) ( *dcmgr.DataCenterLeaderBoardResponse, error){
 	//rsp = & dcmgr.DataCenterLeaderBoardResponse{}
 	dbList, err :=  p.db.GetAll();
 	if err != nil {
 		log.Println(err.Error())
 		log.Println("DataCenterList failure")
-		return err
+		return nil, err
 	}
 
 
@@ -79,21 +79,22 @@ func (p *DcMgrAPIHandler) DataCenterLeaderBoard(ctx context.Context, req *common
 		list[i].Name = dc.Name
 	}
 
+	rsp := dcmgr.DataCenterLeaderBoardResponse{}
+
 	rsp.List = list
 	log.Printf("DataCenterLeaderBoard %+v", rsp.List)
-	return nil
+	return &rsp, nil
 }
 
 
-func (p *DcMgrAPIHandler) NetworkInfo(ctx context.Context, req *common_proto.Empty,
-	rsp *dcmgr.NetworkInfoResponse) error{
-
+func (p *DcMgrAPIHandler) NetworkInfo(ctx context.Context, req *common_proto.Empty)(*dcmgr.NetworkInfoResponse, error){
+	rsp := dcmgr.NetworkInfoResponse{}
 	rsp.UserCount = 299
 	rsp.ContainerCount = 1342
 	rsp.EnvironmentCount = 450
 	rsp.HostCount = 137
 	rsp.Traffic = p.calculateDCTraffic()
-    return nil
+    return &rsp, nil
 }
 
 type Metrics struct {
