@@ -31,7 +31,7 @@ func mongodbconnect() *mgo.Database {
 	config := GetConfig()
 	logStr := fmt.Sprintf("mongodb hostname : %s", config.DatabaseHost)
 	WriteLog(logStr)
-	session, err := mgo.Dial(MongoDBHost)
+	session, err := mgo.Dial(config.DatabaseHost)
 	if err != nil {
 		WriteLog("can not connect to database")
 		return nil

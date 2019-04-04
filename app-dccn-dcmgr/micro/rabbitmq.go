@@ -45,7 +45,8 @@ func createMessage(e Event) string {
 }
 
 func getRabbitMQHost() string {
-	host := "amqp://guest:guest@" + RabbitMQHost + ":5672/"
+	config := GetConfig()
+	host := "amqp://guest:guest@" + config.Rabbitmq + "/"
 	logStr := fmt.Sprintf("RabbitMQ hostname : %s", host)
 	WriteLog(logStr)
 	return host
