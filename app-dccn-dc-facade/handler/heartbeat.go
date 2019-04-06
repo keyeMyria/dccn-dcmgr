@@ -14,8 +14,9 @@ func (p *DcMgrHandler) updateDataCenter(ctx context.Context, dc *common_proto.Da
 	//log.Printf("into updateDataCenter  : %v ", dc)
 	center , err :=  p.db.GetByName(dc.Name)
 
-
+    log.Printf("updateDataCenter start get IP")
     ip := dbservice.GetIP(ctx)
+	log.Printf("updateDataCenter end get IP")
 	//ip = "8.8.8.8"
 
 

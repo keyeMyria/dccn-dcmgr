@@ -36,7 +36,7 @@ func mongodbconnect() *mgo.Database {
 		WriteLog("can not connect to database")
 		return nil
 	}
-	//defer session.Close()
+	defer session.Close()
 
 	// Optional. Switch the session to a monotonic behavior.
 	session.SetMode(mgo.Monotonic, true)

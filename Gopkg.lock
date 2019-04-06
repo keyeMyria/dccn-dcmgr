@@ -3,12 +3,13 @@
 
 [[projects]]
   branch = "develop"
-  digest = "1:217b43b178610bfe4d5f1ac6b12ee8dc0c8500a4c1dab64d39a2027b38dc9a1e"
+  digest = "1:0f9068da23314dc521bed987ff74525553a3e8be3b4bc2c8e1a0b6c51dcb74ff"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "db",
     "protos",
     "protos/common",
+    "protos/dcmgr/v1/grpc",
     "protos/dcmgr/v1/micro",
   ]
   pruneopts = "UT"
@@ -42,10 +43,11 @@
   version = "v0.1.0"
 
 [[projects]]
-  digest = "1:239c4c7fd2159585454003d9be7207167970194216193a8a210b8d29576f19c9"
+  digest = "1:64c2b533ffd17023738c534548ab2455d7f519bc15ed4225145425ed2222448b"
   name = "github.com/golang/protobuf"
   packages = [
     "proto",
+    "protoc-gen-go/descriptor",
     "ptypes",
     "ptypes/any",
     "ptypes/duration",
@@ -253,12 +255,12 @@
   version = "v0.25.0"
 
 [[projects]]
-  digest = "1:baead7e9fa73faf55028ff508e68612d230787c912f64b6533f2d00e37fe835f"
+  digest = "1:910983b8aace45092015802f9ab249a6d7e174ceb31db034eef5176ef522365b"
   name = "github.com/micro/go-rcache"
   packages = ["."]
   pruneopts = "UT"
-  revision = "c795e0972a7eb6ca2ae1098371028d168870d7d0"
-  version = "v0.2.1"
+  revision = "ec34c04e36ed57db53869799e7ca2c04b4db0dcc"
+  version = "v0.3.0"
 
 [[projects]]
   digest = "1:6271fb71dcd6758564f64edeb022e7fc4485fa5a63dcb68805ab760e2ec34ead"
@@ -282,12 +284,12 @@
   version = "v0.2.0"
 
 [[projects]]
-  digest = "1:4c195ae33dbe8df4eb3485f3357788f47b614547abcd048cbcc59d9025db6b8d"
+  digest = "1:2b4b4b2e5544c2a11a486c1b631357aa2ddf766e50c1b2483cf809da2c511234"
   name = "github.com/miekg/dns"
   packages = ["."]
   pruneopts = "UT"
-  revision = "cc8cd02140663157ce797c6650488d6c8563f31f"
-  version = "v1.1.6"
+  revision = "73601d4aed9d844322611759d7f3619110b7c88e"
+  version = "v1.1.8"
 
 [[projects]]
   digest = "1:5d231480e1c64a726869bc4142d270184c419749d34f167646baa21008eb0a79"
@@ -374,7 +376,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:b5f24d3bebb8af63b0ee1a58dd5405cc5dbbead5425e110c961214779bee1473"
+  digest = "1:c1863f20af32e80ebefdc180096bd106471460e361f911648d0de190dfe71bbf"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -392,15 +394,15 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "15845e8f865bdabdefb6e7da65b4d9e8de5e94ef"
+  revision = "74de082e2cca95839e88aa0aeee5aadf6ce7710f"
 
 [[projects]]
   branch = "master"
-  digest = "1:5637b3b43405643229e55140bb3049dfa7d73957ba9ecfccc31cdadbfbe0b1f9"
+  digest = "1:c9a4e761695039425d21448d3289ff280c3a98f0c8145fa7417d9889556006b7"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "f49334f85ddcf0f08d7fb6dd7363e9e6d6b777eb"
+  revision = "9eb1bfa1ce65ae8a6ff3114b0aaf9a41a6cf3560"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -431,10 +433,10 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "e79c0c59cdb5e117ef82a6f885294df3d74065d5"
+  revision = "f467c93bbac2133ff463e1f93d18d8f9f3f04451"
 
 [[projects]]
-  digest = "1:c00eb80d7b152379c3e94c38d82b29deca98b1d0f53e4e20362589b7fcbffa07"
+  digest = "1:87d21766dc058648c95ae9f929496931684f576e2fbd7c80e36ab7c07b6896cf"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -462,6 +464,8 @@
     "metadata",
     "naming",
     "peer",
+    "reflection",
+    "reflection/grpc_reflection_v1alpha",
     "resolver",
     "resolver/dns",
     "resolver/passthrough",
@@ -494,13 +498,18 @@
     "github.com/Ankr-network/dccn-common/db",
     "github.com/Ankr-network/dccn-common/protos",
     "github.com/Ankr-network/dccn-common/protos/common",
+    "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
     "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/examples/common",
     "github.com/google/uuid",
     "github.com/micro/go-grpc",
     "github.com/micro/go-micro",
     "github.com/micro/go-plugins/broker/rabbitmq",
+    "github.com/streadway/amqp",
+    "golang.org/x/net/context",
+    "google.golang.org/grpc",
     "google.golang.org/grpc/peer",
+    "google.golang.org/grpc/reflection",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",
   ]

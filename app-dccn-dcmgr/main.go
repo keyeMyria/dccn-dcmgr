@@ -1,16 +1,17 @@
 package main
 
 import (
+	"github.com/Ankr-network/dccn-common/protos"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	//"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
 	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/handler"
+	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/scheduler"
 	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/subscriber"
+
 	//"github.com/micro/go-micro"
 	"log"
 
 	//"github.com/micro/go-micro"
 
-	"github.com/Ankr-network/dccn-common/protos"
 	//"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/config"
 	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/db_service"
 	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/micro"
@@ -49,7 +50,15 @@ func startHandler() {
 	taskFeedback := micro2.NewPublisher(ankr_default.MQFeedbackTask )
 	dcFacadeDeploy := micro2.NewPublisher("dcMgrTaskDeploy")
 
+
+
+	schedulerService := scheduler.New(dcFacadeDeploy)
+	schedulerService.Start()
+
+
+
 	dcHandler := handler.New(db, taskFeedback)
+
 
 
 	if err := micro2.RegisterSubscriber(ankr_default.MQDeployTask,  subscriber.New(dcHandler.DcStreamCaches, dcFacadeDeploy)); err != nil {

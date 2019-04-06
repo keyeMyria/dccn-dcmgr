@@ -9,8 +9,8 @@ import (
 	"github.com/micro/go-micro"
 
 	"github.com/Ankr-network/dccn-common/protos"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/config"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/db_service"
+	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/config"
+	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/db_service"
 	"github.com/micro/go-grpc"
 	_ "github.com/micro/go-plugins/broker/rabbitmq"
 )

@@ -47,8 +47,8 @@ func createMessage(e Event) string {
 func getRabbitMQHost() string {
 	config := GetConfig()
 	host := "amqp://guest:guest@" + config.Rabbitmq + "/"
-	logStr := fmt.Sprintf("RabbitMQ hostname : %s", host)
-	WriteLog(logStr)
+	//logStr := fmt.Sprintf("RabbitMQ hostname : %s", host)
+	//WriteLog(logStr)
 	return host
 }
 
@@ -89,7 +89,7 @@ func Send(topic string, e interface{}) {
 		false,  // immediate
 		m)
 
-	logstr := fmt.Sprintf(" [x] Sent %+v ", b)
+	logstr := fmt.Sprintf(" [x] Sent %s to  %+v ", topic, b)
 	WriteLog(logstr)
 	failOnError(err, "Failed to publish a message")
 }
