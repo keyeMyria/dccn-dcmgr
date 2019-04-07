@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"google.golang.org/grpc/peer"
 	"io/ioutil"
+	"log"
 	"net"
 	"net/http"
 	"strings"
@@ -59,6 +60,7 @@ func GetLatLng(ip string) (string, string, string)  {
 }
 
 func GetIP(ctx context.Context) string {
+	log.Printf("context %+v \n", ctx)
 	pr, ok := peer.FromContext(ctx)
 	if !ok {
 		fmt.Print("failed to get peer from ctx " )
