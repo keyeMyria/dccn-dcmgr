@@ -1,27 +1,21 @@
 package main
 
 import (
-	"github.com/Ankr-network/dccn-common/protos"
-	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/handler"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/scheduler"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/subscriber"
-
-	//"github.com/micro/go-micro"
 	"log"
 
-	//"github.com/micro/go-micro"
-
-	//"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/config"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/db_service"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/micro"
-	//	"github.com/micro/go-grpc"
+	"github.com/Ankr-network/dccn-common/protos"
+	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
+	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	dbservice "github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/scheduler"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/subscriber"
 	_ "github.com/micro/go-plugins/broker/rabbitmq"
 )
 
 var (
-	db   dbservice.DBService
-	err  error
+	db  dbservice.DBService
+	err error
 )
 
 func main() {
@@ -47,21 +41,15 @@ func Init() {
 func startHandler() {
 
 	//New Publisher to deploy new task action.
-	taskFeedback := micro2.NewPublisher(ankr_default.MQFeedbackTask )
+	taskFeedback := micro2.NewPublisher(ankr_default.MQFeedbackTask)
 	dcFacadeDeploy := micro2.NewPublisher("dcMgrTaskDeploy")
-
-
 
 	schedulerService := scheduler.New(dcFacadeDeploy)
 	schedulerService.Start()
 
-
-
 	dcHandler := handler.New(db, taskFeedback)
 
-
-
-	if err := micro2.RegisterSubscriber(ankr_default.MQDeployTask,  subscriber.New(dcHandler.DcStreamCaches, dcFacadeDeploy)); err != nil {
+	if err := micro2.RegisterSubscriber(ankr_default.MQDeployTask, subscriber.New(dcHandler.DcStreamCaches, dcFacadeDeploy)); err != nil {
 		log.Fatal(err.Error())
 	}
 
@@ -72,10 +60,7 @@ func startHandler() {
 
 	service := micro2.NewService()
 
-
 	dcClient := handler.NewAPIHandler(db)
 	dcmgr.RegisterDCAPIServer(service.GetServer(), dcClient)
 	service.Start()
-
-
 }

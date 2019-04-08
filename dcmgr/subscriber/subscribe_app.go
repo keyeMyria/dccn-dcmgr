@@ -1,15 +1,16 @@
 package subscriber
 
 import (
-	"github.com/Ankr-network/dccn-common/protos/common"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/handler"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/micro"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/scheduler"
 	"log"
+
+	"github.com/Ankr-network/dccn-common/protos/common"
+	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/scheduler"
 )
 
 type Subscriber struct {
-	cache *handler.DataCenterStreamCaches
+	cache          *handler.DataCenterStreamCaches
 	dcFacadeDeploy *micro2.Publisher
 }
 
@@ -18,7 +19,7 @@ func New(c *handler.DataCenterStreamCaches, dcFacadeDeploy *micro2.Publisher) *S
 }
 
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStream) error {
-   //   debug.PrintStack()
+	//   debug.PrintStack()
 	task := req.GetTask()
 	service := scheduler.GetSchedulerService()
 	taskRecord := scheduler.TaskRecord{}
@@ -30,5 +31,3 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
 
 	return nil
 }
-
-

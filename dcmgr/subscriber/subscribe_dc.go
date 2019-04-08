@@ -6,7 +6,7 @@ import (
 
 	"github.com/Ankr-network/dccn-common/protos/common"
 
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/handler"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 )
 
 type DCFacade struct {

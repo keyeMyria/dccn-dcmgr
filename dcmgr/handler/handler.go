@@ -1,17 +1,18 @@
 package handler
 
 import (
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/micro"
-	"github.com/google/uuid"
 	"log"
 
+	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	"github.com/google/uuid"
+
 	"github.com/Ankr-network/dccn-common/protos/common"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/db_service"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 )
 
 type DcMgrHandler struct {
 	db             dbservice.DBService
-	taskFeedback   *micro2.Publisher         // sync task information with task manager
+	taskFeedback   *micro2.Publisher       // sync task information with task manager
 	DcStreamCaches *DataCenterStreamCaches // hold all data center as cache
 }
 
@@ -22,7 +23,7 @@ func New(db dbservice.DBService, feedback *micro2.Publisher) *DcMgrHandler {
 		DcStreamCaches: nil,
 	}
 
-//	handler.DcStreamCaches.db = db
+	//	handler.DcStreamCaches.db = db
 	return handler
 }
 
@@ -59,21 +60,19 @@ func New(db dbservice.DBService, feedback *micro2.Publisher) *DcMgrHandler {
 //	}
 //}
 
-func (p *DcMgrHandler) UpdateTask(stream *common_proto.DCStream){
+func (p *DcMgrHandler) UpdateTask(stream *common_proto.DCStream) {
 
 	log.Printf("into updateTask from dc facade msg  : %v ", stream)
 	p.taskFeedback.Publish(stream)
 }
 
-func (p *DcMgrHandler) UpdateDataCenter( dc *common_proto.DataCenter) error {
+func (p *DcMgrHandler) UpdateDataCenter(dc *common_proto.DataCenter) error {
 	// first update database
 	//log.Printf("into updateDataCenter  : %v ", dc)
-	center , err :=  p.db.GetByName(dc.Name)
-
+	center, err := p.db.GetByName(dc.Name)
 
 	//ip := dbservice.GetIP(ctx)
 	ip := "8.8.8.8"
-
 
 	if center.Name == "" {
 		// data center dose not exist, register it
@@ -81,7 +80,7 @@ func (p *DcMgrHandler) UpdateDataCenter( dc *common_proto.DataCenter) error {
 		dc.Id = uuid.New().String()
 
 		lat, lng, country := dbservice.GetLatLng(ip)
-		dc.GeoLocation = &common_proto.GeoLocation{Lat:lat, Lng:lng, Country:country}
+		dc.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
 
 		if err = p.db.Create(dc); err != nil {
 			log.Println(err.Error(), ", ", *dc)
@@ -94,7 +93,6 @@ func (p *DcMgrHandler) UpdateDataCenter( dc *common_proto.DataCenter) error {
 			return err
 		}
 	}
-
 
 	return nil
 }

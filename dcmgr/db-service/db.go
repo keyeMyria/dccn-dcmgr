@@ -2,7 +2,7 @@ package dbservice
 
 import (
 	"github.com/Ankr-network/dccn-common/protos/common"
-	micro "github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/micro"
+	micro "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -22,12 +22,11 @@ type DBService interface {
 	UpdateStatus(name string, status common_proto.DCStatus) error
 	// Close closes db connection
 	Close()
-
 }
 
 // UserDB implements DBService
 type DB struct {
-	collection   *mgo.Collection
+	collection *mgo.Collection
 }
 
 // New returns DBService.
@@ -38,11 +37,9 @@ func New() (*DB, error) {
 	}, nil
 }
 
-func (p *DB)Close(){
-    p.Close()
+func (p *DB) Close() {
+	p.Close()
 }
-
-
 
 // Get gets user item by id.
 func (p *DB) Get(id int64) (*common_proto.DataCenter, error) {
@@ -77,7 +74,6 @@ func (p *DB) UpdateStatus(name string, status common_proto.DCStatus) error {
 		bson.M{"name": name},
 		bson.M{"$set": bson.M{"status": status}})
 }
-
 
 func (p *DB) GetAll() (*[]*common_proto.DataCenter, error) {
 	var dcs []*common_proto.DataCenter

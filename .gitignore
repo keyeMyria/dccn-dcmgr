@@ -25,5 +25,5 @@ vendor/
 # Compiled Binaries
 main
 
-app-dccn-dc-facade
-app-dccn-dcmgr
+dc-facade
+dcmgr

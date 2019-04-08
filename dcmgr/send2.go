@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/Ankr-network/dccn-common/protos"
 	"github.com/Ankr-network/dccn-common/protos/common"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dcmgr/micro"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/micro"
 )
 
 func main() {

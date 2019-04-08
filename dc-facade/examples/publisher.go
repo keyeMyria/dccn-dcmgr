@@ -9,7 +9,7 @@ import (
 
 	ankr_default "github.com/Ankr-network/dccn-common/protos"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
-	testCommon "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/examples/common"
+	testCommon "github.com/Ankr-network/dccn-hub/dcmgr/examples/common"
 
 	_ "github.com/micro/go-plugins/broker/rabbitmq"
 )
