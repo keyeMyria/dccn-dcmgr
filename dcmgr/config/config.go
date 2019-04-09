@@ -3,7 +3,6 @@ package config
 import (
 	"os"
 	"strconv"
-
 	dbcommon "github.com/Ankr-network/dccn-common/db"
 )
 

@@ -6,7 +6,7 @@ import (
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro"
 	"github.com/google/uuid"
-	dbservice "github.com/Ankr-network/dccn-dcmgr/dcmgr/db_service"
+	dbservice "github.com/Ankr-network/dccn-dcmgr/dc-facade/db-service"
 )
 
 func (p *DcMgrHandler) updateDataCenter(ctx context.Context, dc *common_proto.DataCenter, stream dcmgr.DCStreamer_ServerStreamStream) error {

@@ -4,13 +4,13 @@ import (
 	"log"
 
 	"github.com/Ankr-network/dccn-common/protos"
+    micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
 	dbservice "github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/scheduler"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/subscriber"
-	_ "github.com/micro/go-plugins/broker/rabbitmq"
+//	"github.com/micro/go-plugins/broker/rabbitmq"
 )
 
 var (

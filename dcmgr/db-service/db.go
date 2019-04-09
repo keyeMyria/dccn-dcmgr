@@ -2,7 +2,7 @@ package dbservice
 
 import (
 	"github.com/Ankr-network/dccn-common/protos/common"
-	micro "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -24,6 +24,7 @@ type DBService interface {
 	Close()
 }
 
+
 // UserDB implements DBService
 type DB struct {
 	collection *mgo.Collection
@@ -31,7 +32,7 @@ type DB struct {
 
 // New returns DBService.
 func New() (*DB, error) {
-	collection := micro.GetCollection("datacenter")
+	collection := micro2.GetCollection("datacenter")
 	return &DB{
 		collection: collection,
 	}, nil

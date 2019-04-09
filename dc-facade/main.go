@@ -2,15 +2,15 @@ package main
 
 import (
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/handler"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/subscriber"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/handler"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/subscriber"
 	"log"
 
 	"github.com/micro/go-micro"
 
 	"github.com/Ankr-network/dccn-common/protos"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/config"
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/db_service"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/config"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/db-service"
 	"github.com/micro/go-grpc"
 	_ "github.com/micro/go-plugins/broker/rabbitmq"
 )

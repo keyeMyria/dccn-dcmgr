@@ -3,7 +3,6 @@ package handler
 import (
 	"encoding/json"
 	"log"
-
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"

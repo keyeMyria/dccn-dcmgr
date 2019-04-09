@@ -3,9 +3,7 @@ package subscriber
 import (
 	"github.com/Ankr-network/dccn-common/protos"
 	"log"
-
 	"github.com/Ankr-network/dccn-common/protos/common"
-
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 )
 

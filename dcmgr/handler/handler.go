@@ -2,10 +2,8 @@ package handler
 
 import (
 	"log"
-
-	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/google/uuid"
-
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 )

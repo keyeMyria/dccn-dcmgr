@@ -4,8 +4,7 @@ import (
 	"container/heap"
 	"log"
 	"time"
-
-	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 )
 
 // each queue for one datacenter. datacenter pickuping task bases one his priority rules

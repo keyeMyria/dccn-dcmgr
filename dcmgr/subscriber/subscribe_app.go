@@ -4,7 +4,7 @@ import (
 	"log"
 
 	"github.com/Ankr-network/dccn-common/protos/common"
-	micro2 "github.com/Ankr-network/dccn-dcmgr/dcmgr/ankr-micro"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/scheduler"
 )
@@ -20,7 +20,7 @@ func New(c *handler.DataCenterStreamCaches, dcFacadeDeploy *micro2.Publisher) *S
 
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStream) error {
 	//   debug.PrintStack()
-	task := req.GetTask()
+	task := req.GetApp()
 	service := scheduler.GetSchedulerService()
 	taskRecord := scheduler.TaskRecord{}
 	taskRecord.Msg = req

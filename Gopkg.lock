@@ -2,10 +2,11 @@
 
 
 [[projects]]
-  branch = "develop"
-  digest = "1:0f9068da23314dc521bed987ff74525553a3e8be3b4bc2c8e1a0b6c51dcb74ff"
+  branch = "feature/swdev-184-facade-gateway"
+  digest = "1:17674f0ee1a3df1f9ccc4a3d6ac17543a91e3c78ae0a81179d1a0c4434302971"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
+    "ankr-micro",
     "db",
     "protos",
     "protos/common",
@@ -13,15 +14,7 @@
     "protos/dcmgr/v1/micro",
   ]
   pruneopts = "UT"
-  revision = "45970054f6d6597104ff9649889f428d7a52e84a"
-
-[[projects]]
-  branch = "develop"
-  digest = "1:e6578d4c1eef2d960cc2bcf21ab3f23939fb93cf5e7b5837f79bd83e726b12cd"
-  name = "github.com/Ankr-network/dccn-hub"
-  packages = ["app-dccn-dcmgr/examples/common"]
-  pruneopts = "UT"
-  revision = "de4978f0fd200ba443e7291ad6114dcaaefeadfb"
+  revision = "5e187de46c74111d531aaa4c301200c182689857"
 
 [[projects]]
   branch = "master"
@@ -361,7 +354,7 @@
   name = "github.com/streadway/amqp"
   packages = ["."]
   pruneopts = "UT"
-  revision = "14f78b41ce6da3d698c2ef2cc8c0ea7ce9e26688"
+  revision = "75d898a42a940fbc854dfd1a4199eabdc00cf024"
 
 [[projects]]
   branch = "master"
@@ -372,7 +365,7 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "a5d413f7728c81fb97d96a2b722368945f651e78"
+  revision = "38d8ce5564a5b71b2e3a00553993f1b9a7ae852f"
 
 [[projects]]
   branch = "master"
@@ -394,15 +387,15 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "74de082e2cca95839e88aa0aeee5aadf6ce7710f"
+  revision = "eb5bcb51f2a31c7d5141d810b70815c05d9c9146"
 
 [[projects]]
   branch = "master"
-  digest = "1:c9a4e761695039425d21448d3289ff280c3a98f0c8145fa7417d9889556006b7"
+  digest = "1:cf353a5a9ffb2d6f850e9c773e25388a425a70c270546480427ed069e87b136a"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "9eb1bfa1ce65ae8a6ff3114b0aaf9a41a6cf3560"
+  revision = "4b34438f7a67ee5f45cc6132e2bad873a20324e9"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -433,7 +426,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "f467c93bbac2133ff463e1f93d18d8f9f3f04451"
+  revision = "64821d5d210748c883cd2b809589555ae4654203"
 
 [[projects]]
   digest = "1:87d21766dc058648c95ae9f929496931684f576e2fbd7c80e36ab7c07b6896cf"
@@ -495,21 +488,18 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/Ankr-network/dccn-common/ankr-micro",
     "github.com/Ankr-network/dccn-common/db",
     "github.com/Ankr-network/dccn-common/protos",
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
-    "github.com/Ankr-network/dccn-hub/app-dccn-dcmgr/examples/common",
     "github.com/google/uuid",
     "github.com/micro/go-grpc",
     "github.com/micro/go-micro",
     "github.com/micro/go-plugins/broker/rabbitmq",
-    "github.com/streadway/amqp",
     "golang.org/x/net/context",
-    "google.golang.org/grpc",
     "google.golang.org/grpc/peer",
-    "google.golang.org/grpc/reflection",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",
   ]

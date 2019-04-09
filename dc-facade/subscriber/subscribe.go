@@ -8,7 +8,7 @@ import (
 	ankr_default "github.com/Ankr-network/dccn-common/protos"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 
-	"github.com/Ankr-network/dccn-dcmgr/app-dccn-dc-facade/handler"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/handler"
 )
 
 type Subscriber struct {
