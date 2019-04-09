@@ -1,7 +1,6 @@
 package ankrmicro
 
 import (
-	"encoding/json"
 	"fmt"
 	"log"
 	"reflect"
@@ -11,37 +10,16 @@ import (
 	"github.com/streadway/amqp"
 )
 
-var RabbitMQHost = "127.0.0.1"
+// RabbitMQHost contains the endpoint of RabbitMQ broker
+var RabbitMQHost string
 
 var DefaultExchange = "micro"
-
-type Handler interface {
-	Handle(e Event)
-}
-
-type Event struct {
-	Type    string
-	TaskID  int
-	Replica int
-	Name    string
-}
 
 func failOnError(err error, msg string) {
 	if err != nil {
 		logStr := fmt.Sprintf("%s: %s", msg, err)
 		WriteLog(logStr)
 	}
-}
-
-func createMessage(e Event) string {
-
-	// Create JSON from the instance data.
-	// ... Ignore errors.
-	b, _ := json.Marshal(e)
-	// Convert bytes to string.
-	s := string(b)
-	return s
-
 }
 
 func getRabbitMQHost() string {
@@ -52,7 +30,7 @@ func getRabbitMQHost() string {
 	return host
 }
 
-//send message to RabbitMQ queue
+// Send function send message to RabbitMQ queue
 func Send(topic string, e interface{}) {
 
 	conn, err := amqp.Dial(getRabbitMQHost())
@@ -94,7 +72,8 @@ func Send(topic string, e interface{}) {
 	failOnError(err, "Failed to publish a message")
 }
 
-//receive messages from RabbitMQ queue, support failed reconnect function
+// Receive function receives messages from RabbitMQ queue,
+// support failed reconnect function
 func Receive(topic string, handler interface{}) {
 	var rabbitCloseError chan *amqp.Error
 

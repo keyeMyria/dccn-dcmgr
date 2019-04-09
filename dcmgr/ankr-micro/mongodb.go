@@ -7,7 +7,7 @@ import (
 	"gopkg.in/mgo.v2"
 )
 
-var MongoDBHost = "127.0.0.1"
+var MongoDBHost string
 var instance *mgo.Database
 var once sync.Once
 

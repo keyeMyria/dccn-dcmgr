@@ -5,6 +5,9 @@ import (
 	"os"
 )
 
+// Config struct save the configuration of the micro-service
+// Right now, the service is only using rabbitmq and monge as
+// external dependency.
 type Config struct {
 	Rabbitmq     string
 	DatabaseHost string
@@ -22,10 +25,15 @@ func init() {
 
 }
 
+// GetConfig function reads configurations from specified source and
+// return as a Config struct. It could be expended to new sources in
+// the future.
 func GetConfig() Config {
 	return LoadConfigFromEnv()
 }
 
+// LoadConfigFromEnv function reads configurations from environment
+// variables.
 func LoadConfigFromEnv() Config {
 	value := os.Getenv("MICRO_BROKER_ADDRESS")
 	if len(value) > 0 {
@@ -52,10 +60,11 @@ func LoadConfigFromEnv() Config {
 	return config
 }
 
+// Show function print the configuration information to
+// the standard output.
 func (config *Config) Show() {
 	fmt.Printf("RabbitMQ : %s \n", config.Rabbitmq)
 	fmt.Printf("DB_HOST  : %s  \n", config.DatabaseHost)
 	fmt.Printf("DB_Name  : %s  \n", config.DatabaseName)
 	fmt.Printf("Listen   : %s \n", config.Listen)
-
 }

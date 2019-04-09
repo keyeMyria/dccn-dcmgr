@@ -26,9 +26,6 @@ func NewGRPCService() GRPCService {
 
 }
 
-//*
-//pb.RegisterGreeterServer(s, &server{})
-
 func (s *GRPCService) GetServer() *grpc.Server {
 	return s.s
 }
