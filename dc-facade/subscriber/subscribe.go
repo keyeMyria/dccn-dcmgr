@@ -23,7 +23,7 @@ func New(c *handler.DataCenterStreamCaches, ) *Subscriber {
 // UpdateTaskByFeedback receives task result from data center, returns to v1
 // UpdateTaskStatusByFeedback updates database status by performing feedback from the data center of the task.
 // sets executor's id, updates task status.
-func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *common_proto.DCStream) error {
+func (p *Subscriber) HandlerDeploymentRequestFromDCMgr(ctx context.Context, req *common_proto.DCStream) error {
 	debug.PrintStack()
 
 	task := req.GetAppDeployment()
@@ -32,7 +32,7 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, re
 	case common_proto.DCOperation_TASK_CREATE,
 		common_proto.DCOperation_TASK_CANCEL,
 		common_proto.DCOperation_TASK_UPDATE:
-		stream, err := p.cache.One(task)
+		stream, err := p.cache.One(task.Namespace.ClusterName)
 		if err != nil {
 			log.Println(err.Error())
 			return err
