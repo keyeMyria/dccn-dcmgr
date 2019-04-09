@@ -1,48 +1,68 @@
 package handler
 
 import (
-	"log"
 	"context"
+	"log"
+	"net"
+	"time"
+
+	"github.com/Ankr-network/dccn-common/pgrpc"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
-	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro"
-	"github.com/google/uuid"
-	dbservice "github.com/Ankr-network/dccn-dcmgr/dc-facade/db-service"
+	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/dbservice"
+	"google.golang.org/grpc"
 )
 
-func (p *DcMgrHandler) updateDataCenter(ctx context.Context, dc *common_proto.DataCenter, stream dcmgr.DCStreamer_ServerStreamStream) error {
-	// first update database
-	//log.Printf("into updateDataCenter  : %v ", dc)
-	center , err :=  p.db.GetByName(dc.Name)
+var db dbservice.DBService
 
+func CollectStatus() {
+	for range time.Tick(20 * time.Second) {
+		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) (stop bool) {
+			// handle dial error
+			stop = false
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-	if center.Name == "" {
-		log.Printf("updateDataCenter start get IP")
-		ip := dbservice.GetIP(ctx)
-		log.Printf("updateDataCenter end get IP")
-		//ip = "8.8.8.8"
+			// collect status(heartbeat)
+			ctx := context.Background()
+			status, err := dcmgr.NewDCClient(conn).Status(ctx, &common_proto.Empty{})
+			if err != nil {
+				log.Println(err)
+				return
+			}
 
-		// data center dose not exist, register it
-		log.Printf("insert new datacenter  : %s  from ip : %s", dc.Name, ip)
-		dc.Id = uuid.New().String()
+			// FIXME: transaction
+			// update status into db
+			center, err := db.GetByName(status.Name)
+			if err != nil {
+				log.Println(err)
+				return
+			}
+			if center.Name == "" {
+				// data center dose not exist, register it
+				host, _, err := net.SplitHostPort(key)
+				if err != nil {
+					log.Println(err)
+					return
+				}
+				lat, lng, country := dbservice.GetLatLng(host)
+				status.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
 
-		lat, lng, country := dbservice.GetLatLng(ip)
-		dc.GeoLocation = &common_proto.GeoLocation{Lat:lat, Lng:lng, Country:country}
-
-		if err = p.db.Create(dc); err != nil {
-			log.Println(err.Error(), ", ", *dc)
-			return err
-		}
-	} else {
-		log.Printf("update datacenter by name : %s  ", center.Name)
-		if err = p.db.Update(dc); err != nil {
-			log.Println(err.Error())
-			return err
-		}
+				log.Printf("add new datacenter: %s", status.Name)
+				if err = db.Create(status); err != nil {
+					log.Println(err.Error(), ", ", *status)
+					return
+				}
+			} else {
+				log.Printf("update datacenter by name : %s  ", center.Name)
+				if err = db.Update(status); err != nil {
+					log.Println(err.Error())
+					return
+				}
+			}
+			return
+		})
 	}
-
-	// then update stream
-	log.Printf("update new data center stream: %s ", dc.Name)
-	p.DcStreamCaches.Add(dc, stream)
-
-	return nil
 }
