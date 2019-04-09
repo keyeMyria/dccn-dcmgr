@@ -5,7 +5,7 @@ import (
 	"log"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/dbservice"
 	"golang.org/x/net/context"
 )
 
