@@ -32,9 +32,7 @@ func main() {
 // Init starts handler to listen.
 func Init() {
 	log.SetFlags(log.Lshortfile | log.LstdFlags)
-
 	config := micro2.LoadConfigFromEnv()
-
 	config.Show()
 }
 
@@ -57,6 +55,7 @@ func startHandler() {
 	if err := micro2.RegisterSubscriber("FromDCFacadeToDCMgr", subscriber.NewEventFromDCFacade(dcHandler.DcStreamCaches, dcHandler)); err != nil {
 		log.Fatal(err.Error())
 	}
+
 
 	service := micro2.NewService()
 

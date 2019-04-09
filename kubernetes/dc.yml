@@ -16,6 +16,8 @@ spec:
         - name: dccn-dcmgr
           image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dcmgr:feat
           imagePullPolicy: Always
+          ports:
+            - containerPort: 50051
           command: [ "/dcmgr" ]
           env:
           - name: DB_COLLECTION
@@ -44,3 +46,20 @@ spec:
             value: :50051
           - name: MICRO_SERVER_VERSION
             value: v1.0
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dcmgr
+  labels:
+    app: dcmgr
+spec:
+  ports:
+    - port: 50051
+      targetPort: 50051
+      protocol: TCP
+  selector:
+    app: dcmgr
+
