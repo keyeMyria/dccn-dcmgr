@@ -20,7 +20,7 @@ func New(c *handler.DataCenterStreamCaches, dcFacadeDeploy *micro2.Publisher) *S
 
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStream) error {
 	//   debug.PrintStack()
-	task := req.GetApp()
+	task := req.GetAppDeployment()
 	service := scheduler.GetSchedulerService()
 	taskRecord := scheduler.TaskRecord{}
 	taskRecord.Msg = req

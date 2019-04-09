@@ -26,20 +26,20 @@ func New(c *handler.DataCenterStreamCaches, ) *Subscriber {
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *common_proto.DCStream) error {
 	debug.PrintStack()
 
-	task := req.GetTask()
+	task := req.GetAppDeployment()
 	log.Printf("dc manager service(hub) HandlerDeployEvnetFromTaskMgr: Receive New Event: %+v", *task)
 	switch req.OpType {
 	case common_proto.DCOperation_TASK_CREATE,
 		common_proto.DCOperation_TASK_CANCEL,
 		common_proto.DCOperation_TASK_UPDATE:
-		stream, err := p.cache.One(task.DataCenterName)
+		stream, err := p.cache.One(task)
 		if err != nil {
 			log.Println(err.Error())
 			return err
 		}
 		resp := &common_proto.DCStream{
 			OpType:    req.OpType,
-			OpPayload: &common_proto.DCStream_Task{Task: task}}
+			OpPayload: &common_proto.DCStream_AppDeployment{AppDeployment: task}}
 		if err := stream.Send(resp); err != nil {
 			log.Println(err.Error())
 			return err
