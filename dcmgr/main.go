@@ -6,7 +6,7 @@ import (
 	"github.com/Ankr-network/dccn-common/protos"
     micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	dbservice "github.com/Ankr-network/dccn-dcmgr/dcmgr/dbservice"
+	dbservice "github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/scheduler"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/subscriber"
