@@ -3,11 +3,15 @@
 
 [[projects]]
 <<<<<<< HEAD
+<<<<<<< HEAD
   branch = "feature/swdev-184-facade-gateway"
   digest = "1:131b548a458a69a7580e693936bcfb6dc2d5440ba49241705cfbc1798b520f7c"
 =======
   digest = "1:dd8d65a28d72df4cb10700b1fba4bbc1736bb4b73f1d50ffcfea23fb4c873473"
 >>>>>>> [SWDEV-122] refactor to pgrpc
+=======
+  digest = "1:22ae81aff88371cff22e90a77d669c57e5980f1266988a1eba455db95c4ae4f4"
+>>>>>>> [SWDEV-182]remove-go-micro
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -16,7 +20,10 @@
     "protos",
     "protos/common",
     "protos/dcmgr/v1/grpc",
+<<<<<<< HEAD
     "protos/dcmgr/v1/micro",
+=======
+>>>>>>> [SWDEV-182]remove-go-micro
   ]
   pruneopts = "UT"
 <<<<<<< HEAD
@@ -481,7 +488,10 @@
     "github.com/Ankr-network/dccn-common/protos",
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
+<<<<<<< HEAD
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
+=======
+>>>>>>> [SWDEV-182]remove-go-micro
     "github.com/google/uuid",
     "github.com/micro/go-micro",
     "github.com/micro/go-plugins/broker/rabbitmq",

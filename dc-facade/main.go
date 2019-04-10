@@ -4,12 +4,7 @@ import (
 	"log"
 
 	"github.com/Ankr-network/dccn-common/pgrpc"
-	ankr_default "github.com/Ankr-network/dccn-common/protos"
 	"github.com/Ankr-network/dccn-dcmgr/dc-facade/config"
-	"github.com/Ankr-network/dccn-dcmgr/dc-facade/dbservice"
-	"github.com/Ankr-network/dccn-dcmgr/dc-facade/handler"
-	"github.com/micro/go-grpc"
-	"github.com/micro/go-micro"
 	_ "github.com/micro/go-plugins/broker/rabbitmq"
 )
 
@@ -27,33 +22,33 @@ func init() {
 
 func main() {
 	// connect to mongo
-	db, err := dbservice.New(conf.DB)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	defer db.Close()
+	//db, err := dbservice.New(conf.DB)
+	//if err != nil {
+	//	log.Fatalln(err)
+	//}
+	//defer db.Close()
 
 	// init pgrpc
-	if pgrpc.InitClient(":50051", nil); err != nil {
+	if err :=pgrpc.InitClient(":50051", nil); err != nil {
 		log.Fatalln(err)
 	}
 
-	// Initialise service
-	srv := grpc.NewService(
-		micro.Name(ankr_default.DcMgrRegistryServerName),
-	)
-	srv.Init()
-
-	// Register Function as TaskStatusFeedback to update task by data center manager's feedback.
-	srv.Server().Options().Broker.Connect()
-	if err := micro.RegisterSubscriber("dcMgrTaskDeploy", srv.Server(), &handler.Relay{}); err != nil {
-		log.Fatalln(err)
-	}
-
-	// Run srv
-	if err := srv.Run(); err != nil {
-		log.Println(err.Error())
-	}
+	//// Initialise service
+	//srv := grpc.NewService(
+	//	micro.Name(ankr_default.DcMgrRegistryServerName),
+	//)
+	//srv.Init()
+	//
+	//// Register Function as TaskStatusFeedback to update task by data center manager's feedback.
+	//srv.Server().Options().Broker.Connect()
+	//if err := micro.RegisterSubscriber("dcMgrTaskDeploy", srv.Server(), &handler.Relay{}); err != nil {
+	//	log.Fatalln(err)
+	//}
+	//
+	//// Run srv
+	//if err := srv.Run(); err != nil {
+	//	log.Println(err.Error())
+	//}
 }
 //
 //// Init starts handler to listen.
