@@ -29,9 +29,9 @@ func (p *Subscriber) HandlerDeploymentRequestFromDCMgr(ctx context.Context, req 
 	task := req.GetAppDeployment()
 	log.Printf("dc manager service(hub) HandlerDeployEvnetFromTaskMgr: Receive New Event: %+v", *task)
 	switch req.OpType {
-	case common_proto.DCOperation_TASK_CREATE,
-		common_proto.DCOperation_TASK_CANCEL,
-		common_proto.DCOperation_TASK_UPDATE:
+	case common_proto.DCOperation_APP_CREATE,
+		common_proto.DCOperation_APP_CANCEL,
+		common_proto.DCOperation_APP_UPDATE:
 		stream, err := p.cache.One(task.Namespace.ClusterName)
 		if err != nil {
 			log.Println(err.Error())

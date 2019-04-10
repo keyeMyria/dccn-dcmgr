@@ -39,7 +39,7 @@ func Init() {
 func startHandler() {
 
 	//New Publisher to deploy new task action.
-	taskFeedback := micro2.NewPublisher(ankr_default.MQFeedbackTask)
+	taskFeedback := micro2.NewPublisher(ankr_default.MQFeedbackApp)
 	dcFacadeDeploy := micro2.NewPublisher("dcMgrTaskDeploy")
 
 	schedulerService := scheduler.New(dcFacadeDeploy)
@@ -47,7 +47,7 @@ func startHandler() {
 
 	dcHandler := handler.New(db, taskFeedback)
 
-	if err := micro2.RegisterSubscriber(ankr_default.MQDeployTask, subscriber.New(dcHandler.DcStreamCaches, dcFacadeDeploy)); err != nil {
+	if err := micro2.RegisterSubscriber(ankr_default.MQDeployApp, subscriber.New(dcHandler.DcStreamCaches, dcFacadeDeploy)); err != nil {
 		log.Fatal(err.Error())
 	}
 

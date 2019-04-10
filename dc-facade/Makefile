@@ -45,7 +45,7 @@ endef
 define PROGRAM_ENV
 	DB_HOST="127.0.0.1:27017" \
 	DB_NAME="dccn" \
-	DB_COLLECTION="dc" \
+	DB_COLLECTION="datacenter" \
 	DB_TIMEOUT=5 \
 	DB_POOL_LIMIT=4096
 endef

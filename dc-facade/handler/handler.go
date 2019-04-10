@@ -53,9 +53,9 @@ func (p *DcMgrHandler) ServerStream(
 			if err := p.updateDataCenter(ctx, in.GetDataCenter(), stream); err != nil {
 				log.Println(err.Error())
 			}
-		case common_proto.DCOperation_TASK_CREATE,
-			common_proto.DCOperation_TASK_UPDATE,
-			common_proto.DCOperation_TASK_CANCEL: // update task status
+		case common_proto.DCOperation_APP_CREATE,
+			common_proto.DCOperation_APP_UPDATE,
+			common_proto.DCOperation_APP_CANCEL: // update task status
 			if err := p.updateTask(in); err != nil {
 				log.Println(err.Error())
 			}

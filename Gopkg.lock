@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "feature/swdev-184-facade-gateway"
-  digest = "1:46ecdb052ac286d10eb0bef8f72048d380d55814b9f2b860a2de85ccbedc3cb3"
+  digest = "1:b570a06b350c66c8686b840575e0613760a80732da06d2ea0d5ad116775489e1"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -12,9 +12,10 @@
     "protos/common",
     "protos/dcmgr/v1/grpc",
     "protos/dcmgr/v1/micro",
+    "protos/usermgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "11f7ee40a9cd2220a1d363c9277598eb50f11395"
+  revision = "69b8f1e4537499621ea4d64328cc1cdfdf3afbbd"
 
 [[projects]]
   branch = "master"
@@ -429,7 +430,7 @@
   revision = "64821d5d210748c883cd2b809589555ae4654203"
 
 [[projects]]
-  digest = "1:87d21766dc058648c95ae9f929496931684f576e2fbd7c80e36ab7c07b6896cf"
+  digest = "1:56ffb0dcdcddd29a7ce902c1294be0473d0928b6baf5c1c6894f6bb71bc980b1"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -446,6 +447,7 @@
     "grpclog",
     "internal",
     "internal/backoff",
+    "internal/balancerload",
     "internal/binarylog",
     "internal/channelz",
     "internal/envconfig",
@@ -467,8 +469,8 @@
     "tap",
   ]
   pruneopts = "UT"
-  revision = "3507fb8e1a5ad030303c106fef3a47c9fdad16ad"
-  version = "v1.19.1"
+  revision = "236199dd5f8031d698fb64091194aecd1c3895b2"
+  version = "v1.20.0"
 
 [[projects]]
   branch = "v2"
@@ -494,11 +496,14 @@
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
+    "github.com/Ankr-network/dccn-common/protos/usermgr/v1/grpc",
     "github.com/google/uuid",
     "github.com/micro/go-grpc",
     "github.com/micro/go-micro",
     "github.com/micro/go-plugins/broker/rabbitmq",
     "golang.org/x/net/context",
+    "google.golang.org/grpc",
+    "google.golang.org/grpc/metadata",
     "google.golang.org/grpc/peer",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",

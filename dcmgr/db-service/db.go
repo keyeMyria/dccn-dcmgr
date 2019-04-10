@@ -5,6 +5,7 @@ import (
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 )
 
 type DBService interface {
@@ -81,5 +82,7 @@ func (p *DB) GetAll() (*[]*common_proto.DataCenter, error) {
 	if err := p.collection.Find(bson.M{}).All(&dcs); err != nil {
 		return nil, err
 	}
+	log.Printf("why there is nothing %+v", dcs)
+
 	return &dcs, nil
 }
