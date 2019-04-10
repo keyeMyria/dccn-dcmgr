@@ -48,18 +48,3 @@ spec:
             value: v1.0
 
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: dcmgr
-  labels:
-    app: dcmgr
-spec:
-  ports:
-    - port: 50051
-      targetPort: 50051
-      protocol: TCP
-  selector:
-    app: dcmgr
-
