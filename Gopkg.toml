@@ -27,7 +27,7 @@
 
 [[constraint]]
   name = "github.com/Ankr-network/dccn-common"
-  revision="56cf74433e455ebe437b35756e2c0767096db9f" # SWDEV 184
+  revision="9fcb42f845e90b53733ac466b7e2e48b8c4774a7" # SWDEV 184 pgrpc
 
 [[constraint]]
   name = "github.com/dgrijalva/jwt-go"

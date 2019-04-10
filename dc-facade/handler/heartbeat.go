@@ -2,8 +2,8 @@ package handler
 
 import (
 	"context"
+	"encoding/json"
 	"log"
-	"net"
 	"time"
 
 	"github.com/Ankr-network/dccn-common/pgrpc"
@@ -13,13 +13,11 @@ import (
 	"google.golang.org/grpc"
 )
 
-var db dbservice.DBService
-
-func CollectStatus() {
-	for range time.Tick(20 * time.Second) {
+func StartCollectStatus(db dbservice.DBService) {
+	for range time.Tick(3 * time.Second) {
 		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) (stop bool) {
 			// handle dial error
-			stop = false
+			stop = true
 			if err != nil {
 				log.Println(err)
 				return
@@ -33,6 +31,11 @@ func CollectStatus() {
 				return
 			}
 
+			// FIXME: enable mongodb
+			data, _ := json.MarshalIndent(status, "", "    ")
+			log.Printf("%s", data)
+			return
+
 			// FIXME: transaction
 			// update status into db
 			center, err := db.GetByName(status.Name)
@@ -42,12 +45,7 @@ func CollectStatus() {
 			}
 			if center.Name == "" {
 				// data center dose not exist, register it
-				host, _, err := net.SplitHostPort(key)
-				if err != nil {
-					log.Println(err)
-					return
-				}
-				lat, lng, country := dbservice.GetLatLng(host)
+				lat, lng, country := dbservice.GetLatLng(key)
 				status.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
 
 				log.Printf("add new datacenter: %s", status.Name)

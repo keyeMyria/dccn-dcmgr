@@ -24,7 +24,6 @@ type DBService interface {
 	Close()
 }
 
-
 // UserDB implements DBService
 type DB struct {
 	collection *mgo.Collection

@@ -2,9 +2,12 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/Ankr-network/dccn-common/pgrpc"
 	"github.com/Ankr-network/dccn-dcmgr/dc-facade/config"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/dbservice"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/handler"
 	_ "github.com/micro/go-plugins/broker/rabbitmq"
 )
 
@@ -22,16 +25,18 @@ func init() {
 
 func main() {
 	// connect to mongo
-	//db, err := dbservice.New(conf.DB)
-	//if err != nil {
-	//	log.Fatalln(err)
-	//}
+	db, err := dbservice.New(conf.DB)
+	if err != nil {
+		//	log.Fatalln(err)
+	}
 	//defer db.Close()
 
 	// init pgrpc
-	if err :=pgrpc.InitClient(":50051", nil); err != nil {
+	if err := pgrpc.InitClient("50051" /*FIXME: hard code*/, nil); err != nil {
 		log.Fatalln(err)
 	}
+	go handler.StartCollectStatus(db)
+	time.Sleep(2 << 60)
 
 	//// Initialise service
 	//srv := grpc.NewService(

@@ -17,7 +17,7 @@ type Relay struct{}
 // UpdateTaskStatusByFeedback updates database status by performing feedback from the data center of the task.
 // sets executor's id, updates task status.
 func (p *Relay) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *common_proto.DCStream) error {
-	app := req.GetApp()
+	app := req.GetAppDeployment()
 	if app == nil {
 		return fmt.Errorf("invalid request data type: %T", req.OpPayload)
 	}
