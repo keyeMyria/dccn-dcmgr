@@ -2,9 +2,9 @@ package subscriber
 
 import (
 	"github.com/Ankr-network/dccn-common/protos"
-	"log"
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
+	"log"
 )
 
 type DCFacade struct {
@@ -12,7 +12,7 @@ type DCFacade struct {
 }
 
 func NewEventFromDCFacade(c *handler.DataCenterStreamCaches, handler *handler.DcMgrHandler) *DCFacade {
-	return &DCFacade{handler : handler}
+	return &DCFacade{handler: handler}
 }
 
 func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error {
@@ -24,14 +24,13 @@ func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error
 		if err := p.handler.UpdateDataCenter(in.GetDataCenter()); err != nil {
 			log.Println(err.Error())
 		}
-	case common_proto.DCOperation_APP_CREATE,
-		common_proto.DCOperation_APP_UPDATE,
-		common_proto.DCOperation_APP_CANCEL: // update task status
+	case common_proto.DCOperation_TASK_CREATE,
+		common_proto.DCOperation_TASK_UPDATE,
+		common_proto.DCOperation_TASK_CANCEL: // update task status
 		p.handler.UpdateTask(in)
 	default:
 		log.Println(ankr_default.ErrUnknown.Error())
 	}
-
 
 	log.Printf("HandlerFeedBackFromDCFacade done ")
 
