@@ -18,7 +18,6 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 50051
-          command: [ "cmd/dcmgr" ]
           env:
           - name: DB_COLLECTION
             value: datacenter
