@@ -24,7 +24,7 @@ func (p *Relay) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *co
 	log.Printf("dc manager service(hub) HandlerDeployEvnetFromTaskMgr: Receive New Event: %+v", *app)
 
 	switch req.OpType {
-	case common_proto.DCOperation_TASK_CREATE:
+	case common_proto.DCOperation_APP_CREATE:
 		conn, err := pgrpc.Dial("app.DataCenterName")
 		if err != nil {
 			log.Println(err)
@@ -36,7 +36,7 @@ func (p *Relay) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *co
 			return err
 		}
 
-	case common_proto.DCOperation_TASK_UPDATE:
+	case common_proto.DCOperation_APP_UPDATE:
 		conn, err := pgrpc.Dial("app.DataCenterName")
 		if err != nil {
 			log.Println(err)
@@ -48,16 +48,14 @@ func (p *Relay) HandlerDeploymentRequestFromTaskMgr(ctx context.Context, req *co
 			return err
 		}
 
-	case common_proto.DCOperation_TASK_CANCEL:
+	case common_proto.DCOperation_APP_CANCEL:
 		conn, err := pgrpc.Dial("app.DataCenterName")
 		if err != nil {
 			log.Println(err)
 			return err
 		}
 
-		if _, err := dcmgr.NewDCClient(conn).PurgeApp(ctx, &common_proto.AppID{
-			Id: app.Id,
-		}); err != nil {
+		if _, err := dcmgr.NewDCClient(conn).DeleteApp(ctx, app); err != nil {
 			log.Println(err)
 			return err
 		}

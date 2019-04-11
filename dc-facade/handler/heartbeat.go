@@ -10,6 +10,7 @@ import (
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
 	"github.com/Ankr-network/dccn-dcmgr/dc-facade/dbservice"
+	"github.com/google/uuid"
 	"google.golang.org/grpc"
 )
 
@@ -38,21 +39,37 @@ func StartCollectStatus(db dbservice.DBService) {
 
 			// FIXME: transaction
 			// update status into db
-			center, err := db.GetByName(status.Name)
+			center, err := db.GetByName(status.Id)
 			if err != nil {
 				log.Println(err)
 				return
 			}
+
 			if center.Name == "" {
 				// data center dose not exist, register it
 				lat, lng, country := dbservice.GetLatLng(key)
 				status.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
+
+				{ // init new dc id
+					ts := time.Now().UTC().Unix()
+					if _, err := dcmgr.NewDCClient(conn).InitDC(ctx, &common_proto.DataCenter{
+						Id:   uuid.New().String(),
+						Name: "mock_name",
+						DcAttributes: &common_proto.DataCenterAttributes{
+							CreationDate:     uint64(ts),
+							LastModifiedDate: uint64(ts),
+						},
+					}); err != nil {
+						log.Printf("init new datacenter fail: %s", err)
+					}
+				}
 
 				log.Printf("add new datacenter: %s", status.Name)
 				if err = db.Create(status); err != nil {
 					log.Println(err.Error(), ", ", *status)
 					return
 				}
+
 			} else {
 				log.Printf("update datacenter by name : %s  ", center.Name)
 				if err = db.Update(status); err != nil {
