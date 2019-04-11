@@ -14,7 +14,7 @@ spec:
     spec:
         containers:
         - name: dccn-dccn-dcmgr
-          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dccn-dcmgr:feat
+          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dcmgr:feat
           imagePullPolicy: Always
           ports:
             - containerPort: 50051
