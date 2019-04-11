@@ -42,7 +42,10 @@ func startHandler() {
 	taskFeedback := micro2.NewPublisher(ankr_default.MQFeedbackApp)
 	dcFacadeDeploy := micro2.NewPublisher("dcMgrTaskDeploy")
 
-	schedulerService := scheduler.New(dcFacadeDeploy)
+
+	// for test , use
+	//schedulerService := scheduler.New(dcFacadeDeploy)
+	schedulerService := scheduler.New(taskFeedback)
 	schedulerService.Start()
 
 	dcHandler := handler.New(db, taskFeedback)

@@ -78,7 +78,7 @@ func (s *SchedulerService) LoopForSchedule() {
 func (s *SchedulerService) SendTaskToDataCenter(datacenter string, task *TaskRecord) {
 	// TODO update  task  fields (status and datacenter) in database
 	// deploy to dc_facade
-	log.Printf("SendTaskToDataCenter %+v\n", task.Msg)
+	log.Printf("SendTaskToDataCenter  ---> to appmgr for test  %+v\n", task.Msg)
 	s.publisher.Publish(task.Msg)
 	//send2(s.publisher, task.Msg)
 

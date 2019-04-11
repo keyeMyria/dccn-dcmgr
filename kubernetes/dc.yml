@@ -6,19 +6,19 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: dcmgr
+      app: dccn-dcmgr
   template:
     metadata:
       labels:
-        app: dcmgr
+        app: dccn-dcmgr
     spec:
         containers:
-        - name: dccn-dcmgr
-          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dcmgr:feat
+        - name: dccn-dccn-dcmgr
+          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dccn-dcmgr:feat
           imagePullPolicy: Always
           ports:
             - containerPort: 50051
-          command: [ "/dcmgr" ]
+          command: [ "/dccn-dcmgr" ]
           env:
           - name: DB_COLLECTION
             value: datacenter
