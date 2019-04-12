@@ -67,7 +67,7 @@ func (p *DcMgrHandler) UpdateTask(stream *common_proto.DCStream) {
 func (p *DcMgrHandler) UpdateDataCenter(dc_status *common_proto.DataCenterStatus) error {
 	// first update database
 	//log.Printf("into updateDataCenter  : %v ", dc)
-	dc := new(common_proto.DataCenter)
+	dc := new(common_proto.DataCenterStatus)
 	dc.Name = dc_status.Name
 	dc.Id = dc_status.Id
 	dc.Status = dc_status.Status

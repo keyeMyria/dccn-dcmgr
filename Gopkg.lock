@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "feature/swdev-184-facade-gateway"
-  digest = "1:28c8783aa96d0ec243155551cd8d53556886a345164dc86e7e5b30965a87bca9"
+  digest = "1:131b548a458a69a7580e693936bcfb6dc2d5440ba49241705cfbc1798b520f7c"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -12,10 +12,9 @@
     "protos/common",
     "protos/dcmgr/v1/grpc",
     "protos/dcmgr/v1/micro",
-    "protos/usermgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "494925405b5525d49102c903c598ca178807d176"
+  revision = "9ccae72406d0e972994370c3c5b5d30a7b037f59"
 
 [[projects]]
   branch = "master"
@@ -322,7 +321,7 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "e7b772b7007a8e7a7e18751d4314dac3579c5b6a"
+  revision = "88737f569e3a9c7ab309cdc09a07fe7fc87233c3"
 
 [[projects]]
   branch = "master"
@@ -348,11 +347,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:e2e51bf73862610e548f3acd292f447b500e53d792aa55260a8cb605dfd8ba09"
+  digest = "1:3e01c69b34e7c3fa4b7a118ca95a6beaecea00f7f4fb701545d83eacd3badb3c"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "0ad05ae3009d6413d3363aa09b350b2ec37daf09"
+  revision = "b44545bcd369ef9ff9bebcfebf5f3370ef9b1932"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -452,13 +451,10 @@
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
-    "github.com/Ankr-network/dccn-common/protos/usermgr/v1/grpc",
     "github.com/google/uuid",
     "github.com/micro/go-micro",
     "github.com/micro/go-plugins/broker/rabbitmq",
     "golang.org/x/net/context",
-    "google.golang.org/grpc",
-    "google.golang.org/grpc/metadata",
     "google.golang.org/grpc/peer",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",
