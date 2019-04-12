@@ -12,7 +12,7 @@
 *.out
 
 # Vendor
-vendor/
+vendor
 
 # Editor configuration
 .DS_Store
@@ -24,3 +24,5 @@ vendor/
 
 # Compiled Binaries
 main
+dc-facade/dc-facade
+dcmgr/dcmgr

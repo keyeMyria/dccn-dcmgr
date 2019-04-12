@@ -26,8 +26,8 @@
 
 
 [[constraint]]
-  branch = "feature/swdev-184-facade-gateway"
   name = "github.com/Ankr-network/dccn-common"
+  revision="9ccae72406d0e972994370c3c5b5d30a7b037f59" # SWDEV 184 pgrpc
 
 [[constraint]]
   name = "github.com/dgrijalva/jwt-go"
@@ -36,7 +36,6 @@
 [[constraint]]
   name = "github.com/google/uuid"
   version = "1.1.0"
-
 
 [[constraint]]
   branch = "master"

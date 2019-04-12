@@ -12,7 +12,7 @@ type DCFacade struct {
 }
 
 func NewEventFromDCFacade(c *handler.DataCenterStreamCaches, handler *handler.DcMgrHandler) *DCFacade {
-	return &DCFacade{handler : handler}
+	return &DCFacade{handler: handler}
 }
 
 func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error {
@@ -33,7 +33,6 @@ func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error
 	default:
 		log.Println(ankr_default.ErrUnknown.Error())
 	}
-
 
 	log.Printf("HandlerFeedBackFromDCFacade done ")
 
