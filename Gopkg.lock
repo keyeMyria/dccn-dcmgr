@@ -2,24 +2,7 @@
 
 
 [[projects]]
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-  branch = "feature/swdev-184-facade-gateway"
-  digest = "1:131b548a458a69a7580e693936bcfb6dc2d5440ba49241705cfbc1798b520f7c"
-=======
-  digest = "1:dd8d65a28d72df4cb10700b1fba4bbc1736bb4b73f1d50ffcfea23fb4c873473"
->>>>>>> [SWDEV-122] refactor to pgrpc
-=======
-  digest = "1:22ae81aff88371cff22e90a77d669c57e5980f1266988a1eba455db95c4ae4f4"
->>>>>>> [SWDEV-182]remove-go-micro
-=======
-  digest = "1:528e463ba32782b70e8d55d56e469763ea0ea088dfef5e0461c6e35261e8c8af"
->>>>>>> [SWDEV-122] follow protobuf changes
-=======
-  digest = "1:fb759be743bf9b7913d4c34bd5c15b8cec0c0a97e5cedc61ddf36f73d60346ae"
->>>>>>> [SWDEV-122] update code for new protos
+  digest = "1:39ff2c246cacf8738ba0b73f2e8f627c6fbd4bee0b5a78f4b35919890b4bd4f5"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -28,28 +11,9 @@
     "protos",
     "protos/common",
     "protos/dcmgr/v1/grpc",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "protos/dcmgr/v1/micro",
-=======
->>>>>>> [SWDEV-182]remove-go-micro
   ]
   pruneopts = "UT"
-<<<<<<< HEAD
   revision = "9ccae72406d0e972994370c3c5b5d30a7b037f59"
-=======
-  revision = "56cf74433e455ebe437b35756e2c0767096db9f"
->>>>>>> [SWDEV-122] refactor to pgrpc
-=======
-    "protos/usermgr/v1/grpc",
-  ]
-  pruneopts = "UT"
-<<<<<<< HEAD
-  revision = "9fcb42f845e90b53733ac466b7e2e48b8c4774a7"
->>>>>>> [SWDEV-122] follow protobuf changes
-=======
-  revision = "494925405b5525d49102c903c598ca178807d176"
->>>>>>> [SWDEV-122] update code for new protos
 
 [[projects]]
   branch = "master"
@@ -189,12 +153,8 @@
   name = "github.com/hashicorp/serf"
   packages = ["coordinate"]
   pruneopts = "UT"
-<<<<<<< HEAD
   revision = "15cfd05de3dffb3664aa37b06e91f970b825e380"
   version = "v0.8.3"
-=======
-  revision = "b89a09ebd4b1b570e0076d5097272e67c10ac4f6"
-  version = "v0.8.2"
 
 [[projects]]
   branch = "master"
@@ -205,18 +165,6 @@
   revision = "2f1d1f20f75d5404f53b9edf6b53ed5505508675"
 
 [[projects]]
-<<<<<<< HEAD
-  digest = "1:f5a2051c55d05548d2d4fd23d244027b59fbd943217df8aa3b5e170ac2fd6e1b"
-  name = "github.com/json-iterator/go"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "0ff49de124c6f76f8494e194af75bde0f1a49a29"
-  version = "v1.1.6"
->>>>>>> [SWDEV-122] refactor to pgrpc
-
-[[projects]]
-=======
->>>>>>> [SWDEV-122] follow protobuf changes
   digest = "1:6491a68a381ec652fad0b1ed9664870b21763058270be238fc9dd0875e21c095"
   name = "github.com/micro/cli"
   packages = ["."]
@@ -509,27 +457,10 @@
     "github.com/Ankr-network/dccn-common/protos",
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/micro",
-=======
->>>>>>> [SWDEV-182]remove-go-micro
     "github.com/google/uuid",
-    "github.com/micro/go-micro",
-=======
-    "github.com/Ankr-network/dccn-common/protos/usermgr/v1/grpc",
-    "github.com/google/uuid",
->>>>>>> [SWDEV-122] follow protobuf changes
     "github.com/micro/go-plugins/broker/rabbitmq",
     "golang.org/x/net/context",
-<<<<<<< HEAD
-=======
     "google.golang.org/grpc",
-<<<<<<< HEAD
->>>>>>> [SWDEV-122] refactor to pgrpc
-=======
-    "google.golang.org/grpc/metadata",
->>>>>>> [SWDEV-122] follow protobuf changes
     "google.golang.org/grpc/peer",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",
