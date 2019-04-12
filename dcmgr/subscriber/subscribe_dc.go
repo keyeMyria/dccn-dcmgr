@@ -2,9 +2,9 @@ package subscriber
 
 import (
 	"github.com/Ankr-network/dccn-common/protos"
-	"log"
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
+	"log"
 )
 
 type DCFacade struct {
@@ -16,6 +16,8 @@ func NewEventFromDCFacade(c *handler.DataCenterStreamCaches, handler *handler.Dc
 }
 
 func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error {
+
+	log.Printf("recevie messge from dc-facade %+v \n ", req)
 
 	in := req
 	switch in.OpType {

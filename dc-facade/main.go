@@ -1,71 +1,55 @@
 package main
 
 import (
-	"github.com/Ankr-network/dccn-dcmgr/dc-facade/config"
-	"github.com/Ankr-network/dccn-dcmgr/dc-facade/db-service"
-	_ "github.com/micro/go-plugins/broker/rabbitmq"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
+	"github.com/Ankr-network/dccn-common/pgrpc"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/dbservice"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/handler"
+	"log"
 )
 
 var (
-	conf config.Config
-	db   dbservice.DBService
-	err  error
+	db  dbservice.DBService
+	err error
 )
 
-func main() {
-	//Init()
-	//
-	//if db, err = dbservice.New(conf.DB); err != nil {
-	//	log.Fatal(err.Error())
-	//}
-	//defer db.Close()
-	//
-	//startHandler()
+// Init starts handler to listen.
+func Init() {
+	log.SetFlags(log.Lshortfile | log.LstdFlags)
+	config := micro2.LoadConfigFromEnv()
+	config.Show()
+
+	if db, err = dbservice.New(); err != nil {
+		log.Fatal(err.Error())
+	}
+	defer db.Close()
 }
-//
-//// Init starts handler to listen.
-//func Init() {
-//	log.SetFlags(log.Lshortfile | log.LstdFlags)
-//
-//	if conf, err = config.Load(); err != nil {
-//		log.Fatal(err.Error())
-//	}
-//	log.Printf("Load config %+v\n", conf)
-//}
-//
-//func startHandler() {
-//	srv := grpc.NewService(
-//		micro.Name(ankr_default.DcMgrRegistryServerName),
-//	)
-//
-//	// Initialise service
-//	srv.Init()
-//
-//	// Register Task Handler
-//
-//	//Dc Manager register handler
-//	//New Publisher to deploy new task action.
-//	taskFeedback := micro.NewPublisher("FromDCFacadeToDCMgr", srv.Client())
-//
-//	dcHandler := handler.New(db, taskFeedback)
-//
-//	// Register Function as TaskStatusFeedback to update task by data center manager's feedback.
-//	opt := srv.Server().Options()
-//	opt.Broker.Connect()
-//	if err := micro.RegisterSubscriber("dcMgrTaskDeploy", srv.Server(), subscriber.New(dcHandler.DcStreamCaches)); err != nil {
-//		log.Fatal(err.Error())
-//	}
-//
-//	// Register Dc Manager Handler
-//	if err := dcmgr.RegisterDCStreamerHandler(srv.Server(), dcHandler); err != nil {
-//		log.Fatal(err.Error())
-//	}
-//
-//
-//	//defer dcHandler.Cleanup()
-//
-//	// Run srv
-//	if err := srv.Run(); err != nil {
-//		log.Println(err.Error())
-//	}
-//}
+
+func main() {
+	Init()
+
+	// init pgrpc
+	if err := pgrpc.InitClient("50051" /*FIXME: hard code*/, nil); err != nil {
+		log.Fatalln(err)
+	}
+	go handler.StartCollectStatus(db)
+
+
+
+
+	// Register Function as TaskStatusFeedback to update task by data center manager's feedback.
+	sendToDcMgr := micro2.NewPublisher("FromDCFacadeToDCMgr")
+	handler := handler.New(sendToDcMgr)
+
+	if err := micro2.RegisterSubscriber("FromDcMgrToDcFacade", handler); err != nil {
+		log.Fatalln(err)
+	}
+
+
+	forever := make(chan bool)
+
+	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
+	<-forever
+
+
+}

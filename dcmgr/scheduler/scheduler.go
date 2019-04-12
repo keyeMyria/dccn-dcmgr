@@ -2,10 +2,9 @@ package scheduler
 
 import (
 	"container/heap"
-	"github.com/Ankr-network/dccn-common/protos/common"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"log"
 	"time"
-	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 )
 
 // each queue for one datacenter. datacenter pickuping task bases one his priority rules
@@ -77,32 +76,9 @@ func (s *SchedulerService) LoopForSchedule() {
 }
 
 func (s *SchedulerService) SendTaskToDataCenter(datacenter string, task *TaskRecord) {
-	// TODO update  task  fields (status and datacenter) in database
 	// deploy to dc_facade
-
-
-	 report := common_proto.AppReport{}
-	 app := task.Msg.GetAppDeployment()
-	 app.Namespace.ClusterName = "dc"
-	 app.Namespace.ClusterId = "2e8556cb-17dd-4584-9adc-a58d36f92ce5"
-	 app.Namespace.CreationDate = uint64(time.Now().Second())
-	 app.Namespace.Status = common_proto.NamespaceStatus_NS_RUNNING
-	 report.AppDeployment = app
-	 report.Report = "this is a fake msg for test"
-	 report.AppStatus = common_proto.AppStatus_APP_RUNNING
-
-
-		event := common_proto.DCStream{
-		OpType:    common_proto.DCOperation_APP_CREATE,
-		OpPayload: &common_proto.DCStream_AppReport{AppReport: &report},
-	}
-
-
-	event.GetAppReport()
-	s.publisher.Publish(&event)
-	log.Printf("SendTaskToDataCenter  ---> to appmgr for test  %+v\n", event)
-	//send2(s.publisher, task.Msg)
-
+	s.publisher.Publish(task.Msg)
+	log.Printf("SendTaskToDataCenter %+v\n", task.Msg)
 }
 
 func (s *SchedulerService) Start() {

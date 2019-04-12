@@ -35,11 +35,8 @@ devtools:
 
 
 define MICRO_ENV
-	MICRO_REGISTRY="consul" \
 	MICRO_SERVER_ADDRESS=":50051" \
-	MICRO_BROKER="rabbitmq" \
-	MICRO_SERVER_VERSION="v1.0" \
-	MICRO_REGISTER_INTERVAL=15
+	MICRO_BROKER_ADDRESS="amqp://guest:guest@localhost:5672"
 endef
 
 define PROGRAM_ENV

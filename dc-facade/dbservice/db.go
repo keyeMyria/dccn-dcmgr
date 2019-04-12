@@ -39,7 +39,7 @@ func New() (*DB, error) {
 }
 
 func (p *DB) Close() {
-	p.Close()
+	//p.Close()
 }
 
 // Get gets user item by id.
