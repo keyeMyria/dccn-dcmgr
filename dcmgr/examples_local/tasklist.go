@@ -1,5 +1,5 @@
-//package main
-//
+package main
+
 //import (
 //	"context"
 //	//"github.com/Ankr-network/dccn-hub/app-dccn-api/examples/common"

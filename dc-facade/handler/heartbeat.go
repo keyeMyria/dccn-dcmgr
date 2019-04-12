@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"encoding/json"
 	"log"
 	"time"
 
@@ -15,7 +14,7 @@ import (
 )
 
 func StartCollectStatus(db dbservice.DBService) {
-	for range time.Tick(3 * time.Second) {
+	for range time.Tick(20 * time.Second) {
 		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) (stop bool) {
 			// handle dial error
 			stop = true
@@ -32,20 +31,9 @@ func StartCollectStatus(db dbservice.DBService) {
 				return
 			}
 
-			// FIXME: enable mongodb
-			data, _ := json.MarshalIndent(status, "", "    ")
-			log.Printf("%s", data)
-			return
-
 			// FIXME: transaction
 			// update status into db
-			center, err := db.GetByName(status.Id)
-			if err != nil {
-				log.Println(err)
-				return
-			}
-
-			if center.Name == "" {
+			if status.Id == "" {
 				// data center dose not exist, register it
 				lat, lng, country := dbservice.GetLatLng(key)
 				status.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
@@ -71,7 +59,7 @@ func StartCollectStatus(db dbservice.DBService) {
 				}
 
 			} else {
-				log.Printf("update datacenter by name : %s  ", center.Name)
+				log.Printf("update datacenter by name : %s, ID: %s", status.Name, status.Id)
 				if err = db.Update(status); err != nil {
 					log.Println(err.Error())
 					return

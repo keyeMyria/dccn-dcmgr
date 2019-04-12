@@ -1,13 +1,13 @@
 package main
 
 import (
-	"github.com/Ankr-network/dccn-common/protos/common"
-	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"log"
+
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
+	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 )
 
 func main() {
-
 	app := common_proto.App{}
 	app.Name = "workpress_test"
 	app.ChartDetail = &common_proto.ChartDetail{
@@ -34,20 +34,15 @@ func main() {
 	appDeployment.Uid = "xxxxx"
 
 	event := common_proto.DCStream{
-		OpType: common_proto.DCOperation_APP_CREATE,
+		OpType:    common_proto.DCOperation_APP_CREATE,
 		OpPayload: &common_proto.DCStream_AppDeployment{AppDeployment: appDeployment},
 	}
 
-
 	log.Printf("messg %+v \n", &event)
 
-	//publisher := micro2.NewPublisher("FromDcMgrToDcFacade")
+	// publisher := micro2.NewPublisher("FromDcMgrToDcFacade")
 
 	publisher := micro2.NewPublisher("topic.deploy.app") // appmgr to dcmgr
 
 	publisher.Publish(&event)
-
-
-
-
 }
