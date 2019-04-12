@@ -96,7 +96,7 @@ func (s *SchedulerService) SendTaskToDataCenter(datacenter string, task *TaskRec
 
 
 	event.GetAppReport()
-	s.publisher.Publish(event)
+	s.publisher.Publish(&event)
 	log.Printf("SendTaskToDataCenter  ---> to appmgr for test  %+v\n", event)
 	//send2(s.publisher, task.Msg)
 
