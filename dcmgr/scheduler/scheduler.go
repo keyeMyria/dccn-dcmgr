@@ -83,6 +83,9 @@ func (s *SchedulerService) SendTaskToDataCenter(datacenter string, task *TaskRec
 
 	 report := common_proto.AppReport{}
 	 app := task.Msg.GetAppDeployment()
+	 app.Namespace.ClusterName = "dc"
+	 app.Namespace.ClusterId = "2e8556cb-17dd-4584-9adc-a58d36f92ce5"
+	 app.Namespace.CreationDate = uint64(time.Now().Second())
 	 app.Namespace.Status = common_proto.NamespaceStatus_NS_RUNNING
 	 report.AppDeployment = app
 	 report.Report = "this is a fake msg for test"
