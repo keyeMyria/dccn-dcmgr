@@ -13,7 +13,7 @@ var service *SchedulerService
 
 var started = false
 
-var LoopInterval = 10
+var LoopInterval = 1   // for debug it is 1 second, for production  10 second
 
 type SchedulerService struct {
 	queues    map[string]*PriorityQueue // this is task queue for publish to dc_facade
@@ -78,7 +78,7 @@ func (s *SchedulerService) LoopForSchedule() {
 func (s *SchedulerService) SendTaskToDataCenter(datacenter string, task *TaskRecord) {
 	// deploy to dc_facade
 	s.publisher.Publish(task.Msg)
-	log.Printf("SendTaskToDataCenter %+v\n", task.Msg)
+	//log.Printf("SendTaskToDataCenter  %s   \n", s.publisher.GetTopic() , task.Msg)
 }
 
 func (s *SchedulerService) Start() {

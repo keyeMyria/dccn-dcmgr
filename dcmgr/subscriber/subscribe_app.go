@@ -1,10 +1,8 @@
 package subscriber
 
 import (
-	"log"
-
-	"github.com/Ankr-network/dccn-common/protos/common"
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
+	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/scheduler"
 )
@@ -27,7 +25,8 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
 	service.AddTask(&taskRecord)
 
 	//p.dcFacadeDeploy.Publish(req)
-	log.Printf("add AddTask to scheduler service %+v  \n", task)
+	micro2.Printf("add App to scheduler service %+v ", task)
+
 
 	return nil
 }

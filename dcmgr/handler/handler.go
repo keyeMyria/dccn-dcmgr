@@ -60,7 +60,7 @@ func New(db dbservice.DBService, feedback *micro2.Publisher) *DcMgrHandler {
 
 func (p *DcMgrHandler) UpdateTask(stream *common_proto.DCStream) {
 
-	log.Printf("into updateTask from dc facade msg  : %v ", stream)
+	micro2.Printf("update APP from dc facade msg  : %v ", stream)
 	p.taskFeedback.Publish(stream)
 }
 

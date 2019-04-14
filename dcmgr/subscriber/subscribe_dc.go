@@ -1,6 +1,7 @@
 package subscriber
 
 import (
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/protos"
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
@@ -17,7 +18,7 @@ func NewEventFromDCFacade(c *handler.DataCenterStreamCaches, handler *handler.Dc
 
 func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error {
 
-	log.Printf("recevie messge from dc-facade %+v \n ", req)
+	micro2.Printf("recevie messge from dc-facade %+v \n ", req)
 
 	in := req
 	switch in.OpType {
@@ -34,7 +35,7 @@ func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error
 		log.Println(ankr_default.ErrUnknown.Error())
 	}
 
-	log.Printf("HandlerFeedBackFromDCFacade done ")
+	micro2.Print("HandlerFeedBackFromDCFacade done ")
 
 	return nil
 }

@@ -2,7 +2,8 @@
 
 
 [[projects]]
-  digest = "1:b51066cf0107de457d9e2310ecefad9e20177e6ab01cbf84b8adea1e8901e566"
+  branch = "feature/swdev-184-facade-gateway"
+  digest = "1:8669e8599aec6f5f1a3f6f90b2b79ccf962c569d89eb1a97fca6894c1c45d554"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -13,7 +14,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "3a058ee6d2aef70b6ed89ea6c42aaee5b7b02811"
+  revision = "8f377ac75a446878d9fb9767b3687233be521f42"
 
 [[projects]]
   branch = "master"
@@ -357,7 +358,7 @@
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "b44545bcd369ef9ff9bebcfebf5f3370ef9b1932"
+  revision = "97732733099d6a942a73b889770774366de963ed"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
