@@ -59,7 +59,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) er
 	}
 	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v", *app)
 
-	p.sendTestMsg(req)
+	//p.sendTestMsg(req)  this is test message 
 
 	switch req.OpType {
 	case common_proto.DCOperation_APP_CREATE:
