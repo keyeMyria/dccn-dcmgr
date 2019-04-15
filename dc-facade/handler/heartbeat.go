@@ -13,11 +13,10 @@ import (
 	"google.golang.org/grpc"
 )
 
-func StartCollectStatus(db dbservice.DBService) {
+func (p *Relay) StartCollectStatus() {
 	for range time.Tick(20 * time.Second) {
-		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) (stop bool) {
+		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) {
 			// handle dial error
-			stop = true
 			if err != nil {
 				log.Println(err)
 				return
@@ -39,32 +38,37 @@ func StartCollectStatus(db dbservice.DBService) {
 				status.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
 
 				{ // init new dc id
-					ts := time.Now().UTC().Unix()
+					status.Id = uuid.New().String()
+					status.Name = "mock_name"
+					ts := uint64(time.Now().UTC().Unix())
+
 					if _, err := dcmgr.NewDCClient(conn).InitDC(ctx, &common_proto.DataCenter{
-						Id:   uuid.New().String(),
-						Name: "mock_name",
+						Id:   status.Id,
+						Name: status.Name,
 						DcAttributes: &common_proto.DataCenterAttributes{
-							CreationDate:     uint64(ts),
-							LastModifiedDate: uint64(ts),
+							CreationDate:     ts,
+							LastModifiedDate: ts,
 						},
 					}); err != nil {
 						log.Printf("init new datacenter fail: %s", err)
+						return
 					}
-				}
 
-				log.Printf("add new datacenter: %s", status.Name)
-				if err = db.Create(status); err != nil {
-					log.Println(err.Error(), ", ", *status)
-					return
-				}
-
-			} else {
-				log.Printf("update datacenter by name : %s, ID: %s", status.Name, status.Id)
-				if err = db.Update(status); err != nil {
-					log.Println(err.Error())
-					return
+					log.Printf("added new datacenter: %s", status.Name)
 				}
 			}
+
+			pgrpc.Alias(key, status.Id, true)
+
+			event := common_proto.DCStream{
+				OpType: common_proto.DCOperation_HEARTBEAT,
+				OpPayload: &common_proto.DCStream_DataCenter{
+					DataCenter: status,
+				},
+			}
+
+			event.GetAppReport()
+			p.taskFeedback.Publish(&event)
 			return
 		})
 	}
