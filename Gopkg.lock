@@ -2,8 +2,7 @@
 
 
 [[projects]]
-  branch = "feature/swdev-184-facade-gateway"
-  digest = "1:8a60f7642f5bd8f60ee78ca42020ef4670503771ae3de62b9eb40eee13fd2015"
+  digest = "1:8dc2b795408aab003cb7543834a57f2358f35991355516d0da5aae58e2494bf2"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -14,7 +13,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "b42a64b5622b86fbab4358efa9739292f6fe7b48"
+  revision = "e5a57ec70b7ef45697af86b7b1c780fc55d334ea"
 
 [[projects]]
   branch = "master"
@@ -459,6 +458,7 @@
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/taskmgr/v1/grpc",
     "github.com/google/uuid",
+    "github.com/hashicorp/yamux",
     "github.com/micro/go-plugins/broker/rabbitmq",
     "golang.org/x/net/context",
     "google.golang.org/grpc",
