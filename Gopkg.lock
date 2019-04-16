@@ -2,7 +2,8 @@
 
 
 [[projects]]
-  digest = "1:10dcf8507b3c072cc56986a093a03cd6fedc45ece4464fa1e374c57a770d83e7"
+  branch = "feature/swdev-184-facade-gateway"
+  digest = "1:8a60f7642f5bd8f60ee78ca42020ef4670503771ae3de62b9eb40eee13fd2015"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -13,7 +14,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "d3198855e74a93bb55b9df895c5fa6896b19a0ec"
+  revision = "b42a64b5622b86fbab4358efa9739292f6fe7b48"
 
 [[projects]]
   branch = "master"
@@ -331,7 +332,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c1863f20af32e80ebefdc180096bd106471460e361f911648d0de190dfe71bbf"
+  digest = "1:60230c55f7d9266f2bea90327a5bcb4af8dac69fa79f2bbe03955652f538b41c"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -349,7 +350,7 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "eb5bcb51f2a31c7d5141d810b70815c05d9c9146"
+  revision = "1da14a5a36f220ea3f03470682b737b1dfd5de22"
 
 [[projects]]
   branch = "master"
@@ -357,7 +358,7 @@
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "97732733099d6a942a73b889770774366de963ed"
+  revision = "3fd5a3612ccd7907f26270fa92579a0f2f76f734"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -388,7 +389,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "64821d5d210748c883cd2b809589555ae4654203"
+  revision = "d1146b9035b912113a38af3b138eb2af567b2c67"
 
 [[projects]]
   digest = "1:56ffb0dcdcddd29a7ce902c1294be0473d0928b6baf5c1c6894f6bb71bc980b1"
@@ -462,7 +463,6 @@
     "golang.org/x/net/context",
     "google.golang.org/grpc",
     "google.golang.org/grpc/metadata",
-    "google.golang.org/grpc/peer",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",
   ]

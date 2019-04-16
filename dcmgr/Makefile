@@ -37,6 +37,7 @@ devtools:
 define MICRO_ENV
 	MICRO_SERVER_ADDRESS=":50056" \
 	MICRO_BROKER_ADDRESS="amqp://guest:guest@localhost:5672"
+	DEV_EVN=false
 endef
 
 define PROGRAM_ENV

@@ -9,7 +9,7 @@ import (
 
 type DBService interface {
 	// Get gets a dc item by pb's id.
-	Get(id int64) (*common_proto.DataCenterStatus, error)
+	Get(id string) (*common_proto.DataCenterStatus, error)
 	// Get gets a dc item by pb's name.
 	GetByName(name string) (*common_proto.DataCenterStatus, error)
 	// Create Creates a new dc item if not exits.
@@ -42,7 +42,7 @@ func (p *DB) Close() {
 }
 
 // Get gets user item by id.
-func (p *DB) Get(id int64) (*common_proto.DataCenterStatus, error) {
+func (p *DB) Get(id string) (*common_proto.DataCenterStatus, error) {
 	var center common_proto.DataCenterStatus
 	err := p.collection.Find(bson.M{"id": id}).One(&center)
 	return &center, err
@@ -63,11 +63,21 @@ func (p *DB) Create(center *common_proto.DataCenterStatus) error {
 // Update updates user item.
 func (p *DB) Update(datacenter *common_proto.DataCenterStatus) error {
 	return p.collection.Update(
-		bson.M{"name": datacenter.Name},
+		bson.M{"id": datacenter.Id},
 		bson.M{"$set": bson.M{
+			"status": datacenter.Status,
 			"Report":  datacenter.DcHeartbeatReport.Report,
 			"Metrics": datacenter.DcHeartbeatReport.Metrics}})
 		return nil
+}
+
+// Update updates user item.
+func (p *DB) UpdateName(id string, name string) error {
+	return p.collection.Update(
+		bson.M{"id": id},
+		bson.M{"$set": bson.M{
+			"Name":  name}})
+	return nil
 }
 
 func (p *DB) UpdateStatus(name string, status common_proto.DCStatus) error {
