@@ -58,12 +58,16 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	//p.sendTestMsg(req)  this is test message
 	status := common_proto.AppStatus_APP_RUNNING
 	defer func() {
+		report := ""
+		if err != nil {
+			report = err.Error()
+		}
 		p.taskFeedback.Publish(&common_proto.DCStream{
 			OpType: req.OpType,
 			OpPayload: &common_proto.DCStream_AppReport{
 				AppReport: &common_proto.AppReport{
 					AppDeployment: app,
-					Report:        err.Error(),
+					Report:        report,
 					AppStatus:     status,
 				},
 			},
