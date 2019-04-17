@@ -26,7 +26,7 @@ func main() {
 	log.Printf(" [*] Waiting for messages. To exit press CTRL+C")
 
 	// init pgrpc
-	if err := pgrpc.InitClient("50051" /*FIXME: hard code*/, nil, handle); err != nil {
+	if err := pgrpc.InitClient(micro2.GetConfig().Listen, nil, handle, handler.DialOpts()...); err != nil {
 		log.Fatalln(err)
 	}
 	handle.StartCollectStatus()
