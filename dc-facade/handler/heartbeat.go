@@ -24,7 +24,7 @@ func (p *Relay) StartCollectStatus() {
 
 			// collect status(heartbeat)
 			ctx := context.Background()
-			status, err := dcmgr.NewDCClient(conn).Status(ctx, &common_proto.Empty{})
+			status, err := dcmgr.NewDCClient(conn).Overview(ctx, &common_proto.Empty{})
 			if err != nil {
 				log.Println(err)
 				return

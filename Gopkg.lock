@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:8dc2b795408aab003cb7543834a57f2358f35991355516d0da5aae58e2494bf2"
+  digest = "1:aadd596a7fe1112255a8f5edc3a88b1386d6b914a8a21db5e12e7411d077c997"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -13,7 +13,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "e5a57ec70b7ef45697af86b7b1c780fc55d334ea"
+  revision = "9e4e6b7c7d0d94edb7ff9014192cc71040b3e9d0"
 
 [[projects]]
   branch = "master"
@@ -462,6 +462,8 @@
     "github.com/micro/go-plugins/broker/rabbitmq",
     "golang.org/x/net/context",
     "google.golang.org/grpc",
+    "google.golang.org/grpc/credentials",
+    "google.golang.org/grpc/keepalive",
     "google.golang.org/grpc/metadata",
     "gopkg.in/mgo.v2",
     "gopkg.in/mgo.v2/bson",

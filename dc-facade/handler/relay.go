@@ -30,7 +30,6 @@ func (p *Relay) sendTestMsg(msg *common_proto.DCStream) {
 	app.Namespace.ClusterName = "dc"
 	app.Namespace.ClusterId = "2e8556cb-17dd-4584-9adc-a58d36f92ce5"
 	app.Namespace.CreationDate = uint64(time.Now().Second())
-	app.Namespace.Status = common_proto.NamespaceStatus_NS_RUNNING
 	report.AppDeployment = app
 	report.Report = "this is a fake msg for test"
 	report.AppStatus = common_proto.AppStatus_APP_RUNNING
@@ -56,22 +55,17 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v", *app)
 
 	//p.sendTestMsg(req)  this is test message
-	status := common_proto.AppStatus_APP_RUNNING
+	appReport := &common_proto.DCStream_AppReport{
+		AppReport: &common_proto.AppReport{
+			AppDeployment: app,
+		},
+	}
+	event := &common_proto.DCStream{
+		OpType:    req.OpType,
+		OpPayload: appReport,
+	}
 	defer func() {
-		report := ""
-		if err != nil {
-			report = err.Error()
-		}
-		p.taskFeedback.Publish(&common_proto.DCStream{
-			OpType: req.OpType,
-			OpPayload: &common_proto.DCStream_AppReport{
-				AppReport: &common_proto.AppReport{
-					AppDeployment: app,
-					Report:        report,
-					AppStatus:     status,
-				},
-			},
-		})
+		p.taskFeedback.Publish(event)
 	}()
 
 	switch req.OpType {
@@ -79,46 +73,76 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
 		if err != nil {
 			log.Println(err)
-			status = common_proto.AppStatus_APP_START_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			return err
 		}
 
-		if _, err := dcmgr.NewDCClient(conn).CreateApp(ctx, app); err != nil {
+		resp, err := dcmgr.NewDCClient(conn).CreateApp(ctx, app)
+		if err != nil {
 			log.Println(err)
-			status = common_proto.AppStatus_APP_START_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			return err
 		}
-		status = common_proto.AppStatus_APP_STARTING
+
+		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
+			event.OpPayload = &common_proto.DCStream_NsReport{
+				NsReport: &common_proto.NamespaceReport{
+					Namespace: app.Namespace,
+					NsEvent:   resp.NsResult,
+				},
+			}
+		}
+		appReport.AppReport = toReport(resp)
 
 	case common_proto.DCOperation_APP_UPDATE:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
 		if err != nil {
-			status = common_proto.AppStatus_APP_UPDATE_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			log.Println(err)
 			return err
 		}
 
-		if _, err := dcmgr.NewDCClient(conn).UpdateApp(ctx, app); err != nil {
-			status = common_proto.AppStatus_APP_UPDATE_FAILED
+		resp, err := dcmgr.NewDCClient(conn).UpdateApp(ctx, app)
+		if err != nil {
+			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			log.Println(err)
 			return err
 		}
-		status = common_proto.AppStatus_APP_UPDATING
+
+		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
+			event.OpPayload = &common_proto.DCStream_NsReport{
+				NsReport: &common_proto.NamespaceReport{
+					Namespace: app.Namespace,
+					NsEvent:   resp.NsResult,
+				},
+			}
+		}
+		appReport.AppReport = toReport(resp)
 
 	case common_proto.DCOperation_APP_CANCEL:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
 		if err != nil {
-			status = common_proto.AppStatus_APP_CANCEL_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			log.Println(err)
 			return err
 		}
 
-		if _, err := dcmgr.NewDCClient(conn).DeleteApp(ctx, app); err != nil {
-			status = common_proto.AppStatus_APP_CANCEL_FAILED
+		resp, err := dcmgr.NewDCClient(conn).DeleteApp(ctx, app)
+		if err != nil {
+			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			log.Println(err)
 			return err
 		}
-		status = common_proto.AppStatus_APP_CANCELLING
+
+		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
+			event.OpPayload = &common_proto.DCStream_NsReport{
+				NsReport: &common_proto.NamespaceReport{
+					Namespace: app.Namespace,
+					NsEvent:   resp.NsResult,
+				},
+			}
+		}
+		appReport.AppReport = toReport(resp)
 
 	default:
 		log.Println(ankr_default.ErrUnknown.Error())
@@ -127,4 +151,12 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 
 	log.Printf("send message to DataCenter  %+v", *app)
 	return nil
+}
+
+func toReport(resp *common_proto.AppResponce) *common_proto.AppReport {
+	return &common_proto.AppReport{
+		Report:   resp.Error,
+		AppEvent: resp.AppResult,
+		Detail:   resp.Message,
+	}
 }
