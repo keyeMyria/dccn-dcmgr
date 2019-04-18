@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  digest = "1:aadd596a7fe1112255a8f5edc3a88b1386d6b914a8a21db5e12e7411d077c997"
+  digest = "1:92281bc8c3834d7d702b34aa12c97e6572824d6c485ff4cb1920aa99050a64cc"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -13,7 +13,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "9e4e6b7c7d0d94edb7ff9014192cc71040b3e9d0"
+  revision = "433d7b73c7b0a4d8331fead237a846521262e9a0"
 
 [[projects]]
   branch = "master"
