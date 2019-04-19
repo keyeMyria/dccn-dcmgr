@@ -2,7 +2,8 @@
 
 
 [[projects]]
-  digest = "1:cbfb243aa43f02e3e8114bec5a385e5011daaf7b88f4de894cb8b396cc21a151"
+  branch = "feature/swdev-184-facade-gateway"
+  digest = "1:92281bc8c3834d7d702b34aa12c97e6572824d6c485ff4cb1920aa99050a64cc"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -101,12 +102,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:b8ba23b0b493e601d5ebaf21079bd3433eb304a5d73c0fb40b8aea526e94f46b"
+  digest = "1:eba7a1f788fdd3bb76d724ea169217bb868df102e4314cce0310c56f09f62435"
   name = "github.com/hashicorp/go-msgpack"
   packages = ["codec"]
   pruneopts = "UT"
-  revision = "be3a5be7ee2202386d02936a19ae4fbde1c77800"
-  version = "v0.5.3"
+  revision = "c4a1f61d43c2788b8b6fd55304f01a96863eec94"
+  version = "v0.5.4"
 
 [[projects]]
   digest = "1:f668349b83f7d779567c880550534addeca7ebadfdcf44b0b9c39be61864b4b7"
@@ -327,11 +328,11 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "88737f569e3a9c7ab309cdc09a07fe7fc87233c3"
+  revision = "df01cb2cc480549d72034218dd98bf97671450ac"
 
 [[projects]]
   branch = "master"
-  digest = "1:60230c55f7d9266f2bea90327a5bcb4af8dac69fa79f2bbe03955652f538b41c"
+  digest = "1:de32e608e8efd56924af4a3c9d28918373f4d8621d1cf72996abf62826805086"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -349,15 +350,15 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "1da14a5a36f220ea3f03470682b737b1dfd5de22"
+  revision = "1f3472d942ba824034fb77cab6a6cfc1bc8a2c3c"
 
 [[projects]]
   branch = "master"
-  digest = "1:3e01c69b34e7c3fa4b7a118ca95a6beaecea00f7f4fb701545d83eacd3badb3c"
+  digest = "1:d53852c73a1e10a3b9f26554fdea3f3a30f01652bc963417eb1d4f7baab8ce33"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "3fd5a3612ccd7907f26270fa92579a0f2f76f734"
+  revision = "f0ce4c0180bef7e9c51babed693a6e47fdd8962f"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -388,10 +389,10 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "d1146b9035b912113a38af3b138eb2af567b2c67"
+  revision = "e7d98fc518a78c9f8b5ee77be7b0b317475d89e1"
 
 [[projects]]
-  digest = "1:56ffb0dcdcddd29a7ce902c1294be0473d0928b6baf5c1c6894f6bb71bc980b1"
+  digest = "1:305ae1b02020aa7bd0bf7c51eb20cec7fec7d813c8b37e517ac588963fedd43d"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -430,8 +431,8 @@
     "tap",
   ]
   pruneopts = "UT"
-  revision = "236199dd5f8031d698fb64091194aecd1c3895b2"
-  version = "v1.20.0"
+  revision = "25c4f928eaa6d96443009bd842389fb4fa48664e"
+  version = "v1.20.1"
 
 [[projects]]
   branch = "v2"

@@ -62,12 +62,25 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			AppDeployment: app,
 		},
 	}
-	event := &common_proto.DCStream{
+	appEvent := &common_proto.DCStream{
 		OpType:    req.OpType,
 		OpPayload: appReport,
 	}
+
+
+	namespaceReport := &common_proto.DCStream_NsReport{
+		NsReport: &common_proto.NamespaceReport{
+			Namespace: app.Namespace,
+		},
+	}
+
+	namespaceEvent := &common_proto.DCStream{
+		OpType:    req.OpType,
+		OpPayload: namespaceReport,
+	}
 	defer func() {
-		p.taskFeedback.Publish(event)
+		p.taskFeedback.Publish(namespaceEvent)
+		p.taskFeedback.Publish(appEvent)
 	}()
 
 	switch req.OpType {
@@ -85,10 +98,15 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			log.Println(err)
 			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			return err
+		}else{
+			appReport.AppReport.AppEvent =  resp.AppResult
+			appReport.AppReport.Report =  resp.Message
+			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
 
+        /*
 		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
-			event.OpPayload = &common_proto.DCStream_NsReport{
+			appEvent.OpPayload = &common_proto.DCStream_NsReport{
 				NsReport: &common_proto.NamespaceReport{
 					Namespace: app.Namespace,
 					NsEvent:   resp.NsResult,
@@ -96,6 +114,8 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			}
 		}
 		appReport.AppReport = toReport(resp)
+
+        */
 
 	case common_proto.DCOperation_APP_UPDATE:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
@@ -111,17 +131,21 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			log.Println(err)
 			return err
-		}
+		}else{
+		appReport.AppReport.AppEvent =  resp.AppResult
+		appReport.AppReport.Report =  resp.Message
+		namespaceReport.NsReport.NsEvent = resp.NsResult
+	}
 
-		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
-			event.OpPayload = &common_proto.DCStream_NsReport{
-				NsReport: &common_proto.NamespaceReport{
-					Namespace: app.Namespace,
-					NsEvent:   resp.NsResult,
-				},
-			}
-		}
-		appReport.AppReport = toReport(resp)
+		//if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
+		//	appEvent.OpPayload = &common_proto.DCStream_NsReport{
+		//		NsReport: &common_proto.NamespaceReport{
+		//			Namespace: app.Namespace,
+		//			NsEvent:   resp.NsResult,
+		//		},
+		//	}
+		//}
+		//appReport.AppReport = toReport(resp)
 
 	case common_proto.DCOperation_APP_CANCEL:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
@@ -137,22 +161,38 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			log.Println(err)
 			return err
+		}else{
+			appReport.AppReport.AppEvent =  resp.AppResult
+			appReport.AppReport.Report =  resp.Message
+			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
 
-		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
-			event.OpPayload = &common_proto.DCStream_NsReport{
-				NsReport: &common_proto.NamespaceReport{
-					Namespace: app.Namespace,
-					NsEvent:   resp.NsResult,
-				},
-			}
-		}
-		appReport.AppReport = toReport(resp)
+		//if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
+		//	appEvent.OpPayload = &common_proto.DCStream_NsReport{
+		//		NsReport: &common_proto.NamespaceReport{
+		//			Namespace: app.Namespace,
+		//			NsEvent:   resp.NsResult,
+		//		},
+		//	}
+		//}
+		//appReport.AppReport = toReport(resp)
 
 	default:
 		log.Println(ankr_default.ErrUnknown.Error())
 		return ankr_default.ErrUnknown
 	}
+
+	// set event with new data
+	appEvent = &common_proto.DCStream{
+		OpType:    req.OpType,
+		OpPayload: appReport,
+	}
+
+	namespaceEvent = &common_proto.DCStream{
+		OpType:    req.OpType,
+		OpPayload: namespaceReport,
+	}
+
 
 	log.Printf("send message to DataCenter  %+v", *app)
 	return nil
