@@ -20,7 +20,9 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
 	//   debug.PrintStack()
 	task := req.GetAppDeployment()
 	service := scheduler.GetSchedulerService()
+
 	taskRecord := scheduler.TaskRecord{}
+	taskRecord.Namespace = task.Namespace
 	taskRecord.Msg = req
 	service.AddTask(&taskRecord)
 

@@ -24,7 +24,7 @@ func main() {
 		},
 	}
 
-	app.Attributes = &common_proto.AppAttributes{}
+	//app.Attributes = &common_proto.AppAttributes{}
 
 	appDeployment := &common_proto.AppDeployment{}
 	appDeployment.Id = "1111"

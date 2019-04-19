@@ -45,7 +45,7 @@ func startHandler() {
 
 	// for test , use
 	//schedulerService := scheduler.New(dcFacadeDeploy)
-	schedulerService := scheduler.New(dcFacadeDeploy)
+	schedulerService := scheduler.New(dcFacadeDeploy, db)
 	schedulerService.Start()
 
 	dcHandler := handler.New(db, taskFeedback)

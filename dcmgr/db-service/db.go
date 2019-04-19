@@ -16,6 +16,7 @@ type DBService interface {
 	Create(center *common_proto.DataCenterStatus) error
 	// GetAll gets all task related to user id.
 	GetAll() (*[]*common_proto.DataCenterStatus, error)
+	GetAvaliableList() (*[]*common_proto.DataCenterStatus, error)
 	// Update updates dc item
 	Update(center *common_proto.DataCenterStatus) error
 	// UpdateStatus updates dc item
@@ -89,6 +90,16 @@ func (p *DB) UpdateStatus(name string, status common_proto.DCStatus) error {
 func (p *DB) GetAll() (*[]*common_proto.DataCenterStatus, error) {
 	var dcs []*common_proto.DataCenterStatus
 	if err := p.collection.Find(bson.M{}).All(&dcs); err != nil {
+		return nil, err
+	}
+
+	return &dcs, nil
+}
+
+
+func (p *DB) GetAvaliableList() (*[]*common_proto.DataCenterStatus, error) {
+	var dcs []*common_proto.DataCenterStatus
+	if err := p.collection.Find(bson.M{"status" : common_proto.DCStatus_AVAILABLE}).All(&dcs); err != nil {
 		return nil, err
 	}
 

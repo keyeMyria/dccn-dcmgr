@@ -3,6 +3,8 @@ package scheduler
 import (
 	"container/heap"
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
+	"github.com/Ankr-network/dccn-common/protos/common"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 	"log"
 	"time"
 )
@@ -18,6 +20,7 @@ var LoopInterval = 1   // for debug it is 1 second, for production  10 second
 type SchedulerService struct {
 	queues    map[string]*PriorityQueue // this is task queue for publish to dc_facade
 	publisher *micro2.Publisher
+	db dbservice.DBService
 }
 
 func GetSchedulerService() *SchedulerService {
@@ -27,17 +30,18 @@ func GetSchedulerService() *SchedulerService {
 	return service
 }
 
-func New(p *micro2.Publisher) *SchedulerService {
+func New(p *micro2.Publisher, db dbservice.DBService) *SchedulerService {
 	service = new(SchedulerService)
 	service.queues = make(map[string]*PriorityQueue)
 	service.publisher = p
+	service.db = db
 	return service
 }
 
 func (s *SchedulerService) AddTask(task *TaskRecord) {
-	dc := DataCenterSelect(task)
-	if len(dc) > 0 {
-		queue := s.GetTaskPriorityQueue(dc)
+	dcID := DataCenterSelect(task, s.db)
+	if len(dcID) > 0 {
+		queue := s.GetTaskPriorityQueue(dcID)
 		item := TaskRecordItem{}
 		item.Task = task
 		item.Weight = 100
@@ -61,7 +65,6 @@ func (s *SchedulerService) GetTaskPriorityQueue(datacenter string) *PriorityQueu
 
 func (s *SchedulerService) LoopForSchedule() {
 	for {
-		//	log.Printf("LoopForSchedule >>> \n")
 		for k, v := range s.queues {
 			if (len(*v)) > 0 {
 				item := heap.Pop(v).(*TaskRecordItem)
@@ -75,10 +78,34 @@ func (s *SchedulerService) LoopForSchedule() {
 
 }
 
-func (s *SchedulerService) SendTaskToDataCenter(datacenter string, task *TaskRecord) {
+func (s *SchedulerService) SendTaskToDataCenter(datacenterID string, task *TaskRecord) {
 	// deploy to dc_facade
-	s.publisher.Publish(task.Msg)
-	//log.Printf("SendTaskToDataCenter  %s   \n", s.publisher.GetTopic() , task.Msg)
+	taskCreateMsg := task.Msg
+	appDeployment := taskCreateMsg.GetAppDeployment()
+	if appDeployment.Namespace.ClusterId == datacenterID {
+		s.publisher.Publish(task.Msg)  // no need add clusterid
+	}else{
+		appDeployment.Namespace.ClusterId = datacenterID
+		appDeployment.Namespace.Name = s.getDatacenterName(datacenterID)
+		event := common_proto.DCStream{
+			OpType:    common_proto.DCOperation_APP_CREATE,
+			OpPayload: &common_proto.DCStream_AppDeployment{AppDeployment: appDeployment},
+		}
+		s.publisher.Publish(&event)
+
+	}
+
+	log.Printf("SendTaskToDataCenter  task id %s , cluser id %s  \n", appDeployment.Id , appDeployment.Namespace.ClusterId)
+}
+
+func (s *SchedulerService)getDatacenterName(datacenterId string) string {
+	 record, err := s.db.Get(datacenterId)
+	 if err == nil {
+         return ""
+	 }else{
+	 	return record.Name
+	 }
+
 }
 
 func (s *SchedulerService) Start() {
