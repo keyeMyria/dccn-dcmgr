@@ -47,7 +47,9 @@ func (p *Relay) sendTestMsg(msg *common_proto.DCStream) {
 // UpdateTaskStatusByFeedback updates database status by performing feedback from the data center of the task.
 // sets executor's id, updates task status.
 func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (err error) {
-	ctx := context.Background()
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
 	app := req.GetAppDeployment()
 	if app == nil {
 		return fmt.Errorf("invalid request data type: %T", req.OpPayload)
@@ -76,6 +78,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			return err
 		}
+		defer conn.Close()
 
 		resp, err := dcmgr.NewDCClient(conn).CreateApp(ctx, app)
 		if err != nil {
@@ -101,6 +104,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			log.Println(err)
 			return err
 		}
+		defer conn.Close()
 
 		resp, err := dcmgr.NewDCClient(conn).UpdateApp(ctx, app)
 		if err != nil {
@@ -126,6 +130,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			log.Println(err)
 			return err
 		}
+		defer conn.Close()
 
 		resp, err := dcmgr.NewDCClient(conn).DeleteApp(ctx, app)
 		if err != nil {
