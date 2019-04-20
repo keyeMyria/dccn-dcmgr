@@ -44,12 +44,19 @@ func (s *SchedulerService) AddTask(task *TaskRecord) {
 		queue := s.GetTaskPriorityQueue(dcID)
 		item := TaskRecordItem{}
 		item.Task = task
-		item.Weight = 100
+		item.Weight = UserRunningApplicationOnDataCenter(task.Userid, dcID)  //todo  wight =    user used resouce  / dc total resouce   quesion:
 		queue.Push(&item)
 	} else {
+		//todo send failed create msg to appmgr
+
 		log.Printf("can not find data center, add task failed\n")
 	}
 
+}
+
+func  UserRunningApplicationOnDataCenter(user_id string, cluster_id string) int {
+	  count := 65 // call api get
+	  return 1000 - count
 }
 
 func (s *SchedulerService) GetTaskPriorityQueue(datacenter string) *PriorityQueue {
@@ -86,7 +93,7 @@ func (s *SchedulerService) SendTaskToDataCenter(datacenterID string, task *TaskR
 		s.publisher.Publish(task.Msg)  // no need add clusterid
 	}else{
 		appDeployment.Namespace.ClusterId = datacenterID
-		appDeployment.Namespace.Name = s.getDatacenterName(datacenterID)
+		appDeployment.Namespace.ClusterName = s.getDatacenterName(datacenterID)
 		event := common_proto.DCStream{
 			OpType:    common_proto.DCOperation_APP_CREATE,
 			OpPayload: &common_proto.DCStream_AppDeployment{AppDeployment: appDeployment},
@@ -95,12 +102,14 @@ func (s *SchedulerService) SendTaskToDataCenter(datacenterID string, task *TaskR
 
 	}
 
-	log.Printf("SendTaskToDataCenter  task id %s , cluser id %s  \n", appDeployment.Id , appDeployment.Namespace.ClusterId)
+	log.Printf("SendTaskToDataCenter  task id %s , cluster id %s cluster name: %s \n", appDeployment.Id ,
+		                               appDeployment.Namespace.ClusterId, appDeployment.Namespace.ClusterName)
 }
 
 func (s *SchedulerService)getDatacenterName(datacenterId string) string {
 	 record, err := s.db.Get(datacenterId)
-	 if err == nil {
+	 log.Printf("hello %+v \n", record)
+	 if err != nil {
          return ""
 	 }else{
 	 	return record.Name
