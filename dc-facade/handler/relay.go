@@ -181,6 +181,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		//appReport.AppReport = toReport(resp)
 
 	default:
+		log.Printf("process request error : request %+v \n", req)
 		log.Println(ankr_default.ErrUnknown.Error())
 		return ankr_default.ErrUnknown
 	}
