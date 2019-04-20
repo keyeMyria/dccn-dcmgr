@@ -99,7 +99,8 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			return err
 		}else{
-			appReport.AppReport.AppEvent =  resp.AppResult
+			log.Printf("create app respone  %+v \n", resp)
+			appReport.AppReport.AppEvent =  common_proto.AppEvent_LAUNCH_APP_SUCCEED
 			appReport.AppReport.Report =  resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
@@ -120,7 +121,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	case common_proto.DCOperation_APP_UPDATE:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
 		if err != nil {
-			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_UPDATE_APP_FAILED
 			log.Println(err)
 			return err
 		}
@@ -128,13 +129,14 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 
 		resp, err := dcmgr.NewDCClient(conn).UpdateApp(ctx, app)
 		if err != nil {
-			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_UPDATE_APP_FAILED
 			log.Println(err)
 			return err
 		}else{
-		appReport.AppReport.AppEvent =  resp.AppResult
-		appReport.AppReport.Report =  resp.Message
-		namespaceReport.NsReport.NsEvent = resp.NsResult
+			log.Printf("update app respone  %+v \n", resp)
+			appReport.AppReport.AppEvent =  common_proto.AppEvent_UPDATE_APP_SUCCEED
+			appReport.AppReport.Report =  resp.Message
+			namespaceReport.NsReport.NsEvent = resp.NsResult
 	}
 
 		//if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
@@ -150,7 +152,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	case common_proto.DCOperation_APP_CANCEL:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
 		if err != nil {
-			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_CANCEL_APP_FAILED
 			log.Println(err)
 			return err
 		}
@@ -158,11 +160,12 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 
 		resp, err := dcmgr.NewDCClient(conn).DeleteApp(ctx, app)
 		if err != nil {
-			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
+			appReport.AppReport.AppEvent = common_proto.AppEvent_CANCEL_APP_FAILED
 			log.Println(err)
 			return err
 		}else{
-			appReport.AppReport.AppEvent =  resp.AppResult
+			log.Printf("cancel app respone  %+v \n", resp)
+			appReport.AppReport.AppEvent =  common_proto.AppEvent_CANCEL_APP_SUCCEED
 			appReport.AppReport.Report =  resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
