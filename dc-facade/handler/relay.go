@@ -189,7 +189,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	}
 
 	namespaceEvent = &common_proto.DCStream{
-		OpType:    req.OpType,
+		OpType:    common_proto.DCOperation_NS_CREATE,
 		OpPayload: namespaceReport,
 	}
 
