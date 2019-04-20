@@ -21,6 +21,8 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
 	if req.OpType == common_proto.DCOperation_NS_CREATE || req.OpType == common_proto.DCOperation_NS_UPDATE || req.OpType == common_proto.DCOperation_NS_CANCEL {
 		p.dcFacadeDeploy.Publish(req)
 
+		micro2.Printf("send namespace update/cancel to  datacenter %+v ", req)
+
 	}else{
 		task := req.GetAppDeployment()
 		service := scheduler.GetSchedulerService()
