@@ -18,16 +18,23 @@ func New(c *handler.DataCenterStreamCaches, dcFacadeDeploy *micro2.Publisher) *S
 
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStream) error {
 	//   debug.PrintStack()
-	task := req.GetAppDeployment()
-	service := scheduler.GetSchedulerService()
+	if req.OpType == common_proto.DCOperation_NS_CREATE || req.OpType == common_proto.DCOperation_NS_UPDATE || req.OpType == common_proto.DCOperation_NS_CANCEL {
+		p.dcFacadeDeploy.Publish(req)
 
-	taskRecord := scheduler.TaskRecord{}
-	taskRecord.Namespace = task.Namespace
-	taskRecord.Msg = req
-	service.AddTask(&taskRecord)
+	}else{
+		task := req.GetAppDeployment()
+		service := scheduler.GetSchedulerService()
 
-	//p.dcFacadeDeploy.Publish(req)
-	micro2.Printf("add App to scheduler service %+v ", task)
+		taskRecord := scheduler.TaskRecord{}
+		taskRecord.Namespace = task.Namespace
+		taskRecord.Msg = req
+		service.AddTask(&taskRecord)
+
+		//p.dcFacadeDeploy.Publish(req)
+		micro2.Printf("add App to scheduler service %+v ", task)
+	}
+
+
 
 
 	return nil
