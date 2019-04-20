@@ -100,7 +100,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			return err
 		}else{
 			log.Printf("create app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent =  common_proto.AppEvent_LAUNCH_APP_SUCCEED
+			appReport.AppReport.AppEvent =  resp.AppResult
 			appReport.AppReport.Report =  resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
@@ -134,7 +134,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			return err
 		}else{
 			log.Printf("update app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent =  common_proto.AppEvent_UPDATE_APP_SUCCEED
+			appReport.AppReport.AppEvent =   resp.AppResult
 			appReport.AppReport.Report =  resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 	}
@@ -165,7 +165,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			return err
 		}else{
 			log.Printf("cancel app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent =  common_proto.AppEvent_CANCEL_APP_SUCCEED
+			appReport.AppReport.AppEvent =   resp.AppResult
 			appReport.AppReport.Report =  resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
