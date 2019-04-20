@@ -2,7 +2,6 @@ package subscriber
 
 import (
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
-	"github.com/Ankr-network/dccn-common/protos"
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/handler"
 	"log"
@@ -27,12 +26,14 @@ func (p *DCFacade) HandlerFeedBackFromDCFacade(req *common_proto.DCStream) error
 		if err := p.handler.UpdateDataCenter(in.GetDataCenter()); err != nil {
 			log.Println(err.Error())
 		}
-	case common_proto.DCOperation_APP_CREATE,
-		common_proto.DCOperation_APP_UPDATE,
-		common_proto.DCOperation_APP_CANCEL: // update task status
-		p.handler.UpdateTask(in)
 	default:
-		log.Println(ankr_default.ErrUnknown.Error())
+	//case common_proto.DCOperation_APP_CREATE,
+	//	common_proto.DCOperation_APP_UPDATE,
+	//	common_proto.DCOperation_APP_CANCEL,
+	//	common_proto.DCOperation_NS_CREATE
+		p.handler.UpdateTask(in)
+
+		//log.Println(ankr_default.ErrUnknown.Error())
 	}
 
 	micro2.Print("HandlerFeedBackFromDCFacade done ")
