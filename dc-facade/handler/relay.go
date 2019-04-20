@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"time"
 
@@ -51,10 +50,8 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	defer cancel()
 
 	app := req.GetAppDeployment()
-	if app == nil {
-		return fmt.Errorf("invalid request data type: %T", req.OpPayload)
-	}
-	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v", *app)
+	ns := req.GetNamespace()
+	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v %+v", *app, *ns)
 
 	//p.sendTestMsg(req)  this is test message
 	appReport := &common_proto.DCStream_AppReport{
@@ -66,7 +63,6 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		OpType:    req.OpType,
 		OpPayload: appReport,
 	}
-
 
 	namespaceReport := &common_proto.DCStream_NsReport{
 		NsReport: &common_proto.NamespaceReport{
@@ -80,7 +76,9 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 	}
 	defer func() {
 		p.taskFeedback.Publish(namespaceEvent)
-		p.taskFeedback.Publish(appEvent)
+		if app != nil {
+			p.taskFeedback.Publish(appEvent)
+		}
 	}()
 
 	switch req.OpType {
@@ -98,25 +96,12 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			log.Println(err)
 			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
 			return err
-		}else{
+		} else {
 			log.Printf("create app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent =  resp.AppResult
-			appReport.AppReport.Report =  resp.Message
+			appReport.AppReport.AppEvent = resp.AppResult
+			appReport.AppReport.Report = resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
-
-        /*
-		if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
-			appEvent.OpPayload = &common_proto.DCStream_NsReport{
-				NsReport: &common_proto.NamespaceReport{
-					Namespace: app.Namespace,
-					NsEvent:   resp.NsResult,
-				},
-			}
-		}
-		appReport.AppReport = toReport(resp)
-
-        */
 
 	case common_proto.DCOperation_APP_UPDATE:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
@@ -132,22 +117,12 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			appReport.AppReport.AppEvent = common_proto.AppEvent_UPDATE_APP_FAILED
 			log.Println(err)
 			return err
-		}else{
+		} else {
 			log.Printf("update app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent =   resp.AppResult
-			appReport.AppReport.Report =  resp.Message
+			appReport.AppReport.AppEvent = resp.AppResult
+			appReport.AppReport.Report = resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
-	}
-
-		//if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
-		//	appEvent.OpPayload = &common_proto.DCStream_NsReport{
-		//		NsReport: &common_proto.NamespaceReport{
-		//			Namespace: app.Namespace,
-		//			NsEvent:   resp.NsResult,
-		//		},
-		//	}
-		//}
-		//appReport.AppReport = toReport(resp)
+		}
 
 	case common_proto.DCOperation_APP_CANCEL:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
@@ -163,23 +138,72 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			appReport.AppReport.AppEvent = common_proto.AppEvent_CANCEL_APP_FAILED
 			log.Println(err)
 			return err
-		}else{
+		} else {
 			log.Printf("cancel app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent =   resp.AppResult
-			appReport.AppReport.Report =  resp.Message
+			appReport.AppReport.AppEvent = resp.AppResult
+			appReport.AppReport.Report = resp.Message
 			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
 
-		//if resp.NsResult != common_proto.NamespaceEvent_LAUNCH_NS_SUCCEED {
-		//	appEvent.OpPayload = &common_proto.DCStream_NsReport{
-		//		NsReport: &common_proto.NamespaceReport{
-		//			Namespace: app.Namespace,
-		//			NsEvent:   resp.NsResult,
-		//		},
-		//	}
-		//}
-		//appReport.AppReport = toReport(resp)
+	case common_proto.DCOperation_NS_CREATE:
+		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		if err != nil {
+			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_LAUNCH_NS_FAILED
+			log.Println(err)
+			return err
+		}
+		defer conn.Close()
 
+		resp, err := dcmgr.NewDCClient(conn).CreateNamespace(ctx, ns)
+		if err != nil {
+			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_LAUNCH_NS_FAILED
+			log.Println(err)
+			return err
+		}
+
+		log.Printf("create namespace respone  %+v \n", resp)
+		namespaceReport.NsReport.NsEvent = resp.NsResult
+
+	case common_proto.DCOperation_NS_UPDATE:
+		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		if err != nil {
+			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_UPDATE_NS_FAILED
+			log.Println(err)
+			return err
+		}
+		defer conn.Close()
+
+		resp, err := dcmgr.NewDCClient(conn).UpdateNamespace(ctx, ns)
+		if err != nil {
+			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_LAUNCH_NS_FAILED
+			log.Println(err)
+			return err
+		}
+
+		log.Printf("update namespace respone  %+v \n", resp)
+		namespaceReport.NsReport.NsEvent = resp.NsResult
+
+	case common_proto.DCOperation_NS_CANCEL:
+		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		if err != nil {
+			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_CANCEL_NS_FAILED
+			log.Println(err)
+			return err
+		}
+		defer conn.Close()
+
+		resp, err := dcmgr.NewDCClient(conn).DeleteNamespace(ctx, ns)
+		if err != nil {
+			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_LAUNCH_NS_FAILED
+			log.Println(err)
+			return err
+		}
+
+		log.Printf("delete namespace respone  %+v \n", resp)
+		namespaceReport.NsReport.NsEvent = resp.NsResult
+
+	case common_proto.DCOperation_HEARTBEAT:
+		fallthrough
 	default:
 		log.Printf("process request error : request %+v \n", req)
 		log.Println(ankr_default.ErrUnknown.Error())
@@ -196,7 +220,6 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		OpType:    common_proto.DCOperation_NS_CREATE,
 		OpPayload: namespaceReport,
 	}
-
 
 	log.Printf("send message to DataCenter  %+v", *app)
 	return nil
