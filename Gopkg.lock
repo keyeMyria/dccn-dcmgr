@@ -2,8 +2,7 @@
 
 
 [[projects]]
-  branch = "feature/swdev-184-facade-gateway"
-  digest = "1:92281bc8c3834d7d702b34aa12c97e6572824d6c485ff4cb1920aa99050a64cc"
+  digest = "1:5b9b93c7420f88d9f6988321dec21c0ed40431255e515bb05db16a4bfc6406ec"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -14,7 +13,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "433d7b73c7b0a4d8331fead237a846521262e9a0"
+  revision = "66545a93ce65dd5a9f3916b9fa6e7f3680e1f3fd"
 
 [[projects]]
   branch = "master"
