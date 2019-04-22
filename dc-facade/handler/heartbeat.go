@@ -24,9 +24,10 @@ func (p *Relay) StartCollectStatus() {
 			defer conn.Close()
 
 			// collect status(heartbeat)
-			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 			defer cancel()
 
+			log.Println("collecting status of key ", key)
 			status, err := dcmgr.NewDCClient(conn).Overview(ctx, &common_proto.Empty{})
 			if err != nil {
 				log.Println(err)
@@ -45,6 +46,7 @@ func (p *Relay) StartCollectStatus() {
 					status.Name = "mock_name"
 					ts := uint64(time.Now().UTC().Unix())
 
+					log.Println("initing dc of key ", key)
 					if _, err := dcmgr.NewDCClient(conn).InitDC(ctx, &common_proto.DataCenter{
 						Id:   status.Id,
 						Name: status.Name,
@@ -61,7 +63,10 @@ func (p *Relay) StartCollectStatus() {
 				}
 			}
 
-			pgrpc.Alias(key, status.Id, true)
+			if key != status.Id {
+				log.Printf("alias %s into %s", key, status.Id)
+				pgrpc.Alias(key, status.Id, true)
+			}
 
 			event := common_proto.DCStream{
 				OpType: common_proto.DCOperation_HEARTBEAT,
@@ -70,9 +75,10 @@ func (p *Relay) StartCollectStatus() {
 				},
 			}
 
-			event.GetAppReport()
+			log.Println("publishing status of key ", key)
 			p.taskFeedback.Publish(&event)
-			return
 		})
+
+		log.Printf("heartbeat finish")
 	}
 }
