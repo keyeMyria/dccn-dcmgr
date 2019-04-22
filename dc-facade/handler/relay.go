@@ -51,7 +51,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 
 	app := req.GetAppDeployment()
 	ns := req.GetNamespace()
-	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v %+v", *app, *ns)
+	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v", req)
 
 	//p.sendTestMsg(req)  this is test message
 	appReport := &common_proto.DCStream_AppReport{

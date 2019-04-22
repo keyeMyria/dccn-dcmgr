@@ -20,7 +20,7 @@ type DBService interface {
 	// Update updates dc item
 	Update(center *common_proto.DataCenterStatus) error
 	// UpdateStatus updates dc item
-	UpdateStatus(name string, status common_proto.DCStatus) error
+	UpdateStatus(clusterID string, status common_proto.DCStatus) error
 	// Close closes db connection
 	Close()
 }
@@ -81,9 +81,9 @@ func (p *DB) UpdateName(id string, name string) error {
 	return nil
 }
 
-func (p *DB) UpdateStatus(name string, status common_proto.DCStatus) error {
+func (p *DB) UpdateStatus(clusterID string, status common_proto.DCStatus) error {
 	return p.collection.Update(
-		bson.M{"name": name},
+		bson.M{"id": clusterID},
 		bson.M{"$set": bson.M{"status": status}})
 }
 
