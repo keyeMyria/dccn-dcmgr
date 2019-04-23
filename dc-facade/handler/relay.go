@@ -51,14 +51,18 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 
 	app := req.GetAppDeployment()
 	ns := req.GetNamespace()
-	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v", req)
+	report := req.GetAppReport()
+	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v %+v", *app, *ns)
 
-	//p.sendTestMsg(req)  this is test message
 	appReport := &common_proto.DCStream_AppReport{
 		AppReport: &common_proto.AppReport{
 			AppDeployment: app,
 		},
 	}
+	if report == nil {
+		appReport.AppReport = report
+	}
+
 	appEvent := &common_proto.DCStream{
 		OpType:    req.OpType,
 		OpPayload: appReport,
@@ -69,15 +73,23 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			Namespace: app.Namespace,
 		},
 	}
-
 	namespaceEvent := &common_proto.DCStream{
 		OpType:    common_proto.DCOperation_NS_CREATE,
 		OpPayload: namespaceReport,
 	}
+
 	defer func() {
-		p.taskFeedback.Publish(namespaceEvent)
+		if app != nil || ns != nil {
+			p.taskFeedback.Publish(namespaceEvent)
+		}
 		if app != nil {
 			p.taskFeedback.Publish(appEvent)
+		}
+		if report != nil {
+			p.taskFeedback.Publish(&common_proto.DCStream{
+				OpType:    common_proto.DCOperation_APP_DETAIL,
+				OpPayload: appReport,
+			})
 		}
 	}()
 
@@ -201,6 +213,25 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 
 		log.Printf("delete namespace respone  %+v \n", resp)
 		namespaceReport.NsReport.NsEvent = resp.NsResult
+
+	case common_proto.DCOperation_APP_DETAIL:
+		conn, err := pgrpc.Dial(report.AppDeployment.Namespace.ClusterId)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+		defer conn.Close()
+
+		resp, err := dcmgr.NewDCClient(conn).Status(ctx, &common_proto.AppID{
+			Id: report.AppDeployment.Id,
+		})
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+
+		log.Printf("collect app detail of %s respone  %+v \n", report.AppDeployment.Id, resp)
+		report.Detail = resp.Message
 
 	case common_proto.DCOperation_HEARTBEAT:
 		fallthrough
