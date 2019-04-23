@@ -56,7 +56,7 @@ func (p *Relay)CreateApp(req *common_proto.DCStream) (err error){
 	if err != nil {
 		log.Println(err)
 		appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
-		return err
+		return err  //todo use defer send msg for this case
 	}
 	defer conn.Close()
 
@@ -64,7 +64,7 @@ func (p *Relay)CreateApp(req *common_proto.DCStream) (err error){
 	if err != nil {
 		log.Println(err)
 		appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
-		return err
+		return err //todo use defer send msg for this case
 	} else {
 		log.Printf("create app respone  %+v \n", resp)
 		appReport.AppReport.AppEvent = resp.AppResult
@@ -104,7 +104,7 @@ func (p *Relay)UpdateCancelDetailApp(req *common_proto.DCStream) (err error){
 		if err != nil {
 			appReport.AppReport.AppEvent = common_proto.AppEvent_UPDATE_APP_FAILED
 			log.Println(err)
-			return err
+			return err //todo use defer send msg for this case
 		}
 		defer conn.Close()
 
@@ -179,7 +179,7 @@ func (p *Relay)NamespaceProcess(req *common_proto.DCStream) (err error){
 		},
 	}
 	namespaceEvent := &common_proto.DCStream{
-		OpType:    common_proto.DCOperation_NS_CREATE,
+		OpType:    req.OpType,
 		OpPayload: namespaceReport,
 	}
 
@@ -189,7 +189,7 @@ func (p *Relay)NamespaceProcess(req *common_proto.DCStream) (err error){
 		if err != nil {
 			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_LAUNCH_NS_FAILED
 			log.Println(err)
-			return err
+			return err  //todo use defer send msg for this case
 		}
 		defer conn.Close()
 
