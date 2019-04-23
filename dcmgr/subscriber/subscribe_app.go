@@ -25,16 +25,28 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
 		micro2.Printf("send namespace create/update/cancel to  datacenter %+v ", req)
 
 	}else{
-		task := req.GetAppDeployment()
-		service := scheduler.GetSchedulerService()
 
-		taskRecord := scheduler.TaskRecord{}
-		taskRecord.Namespace = task.Namespace
-		taskRecord.Msg = req
-		service.AddTask(&taskRecord)
+		if req.OpType == common_proto.DCOperation_APP_CREATE {
+			task := req.GetAppDeployment()
+			service := scheduler.GetSchedulerService()
 
-		//p.dcFacadeDeploy.Publish(req)
-		micro2.Printf("add App to scheduler service %+v ", task)
+			taskRecord := scheduler.TaskRecord{}
+			taskRecord.Namespace = task.Namespace
+			taskRecord.Msg = req
+			service.AddTask(&taskRecord)
+
+			//p.dcFacadeDeploy.Publish(req)
+			micro2.Printf("add App to scheduler service %+v ", task)
+		}else if req.OpType == common_proto.DCOperation_APP_UPDATE || req.OpType == common_proto.DCOperation_APP_CANCEL || req.OpType == common_proto.DCOperation_APP_DETAIL {
+			p.dcFacadeDeploy.Publish(req)
+			micro2.Printf("send app update/cancel/detail to  datacenter %+v ", req)
+		}else{
+			micro2.Printf("error in HandlerDeploymentRequestFromTaskMgr %+v", req)
+		}
+
+
+
+
 	}
 
 
