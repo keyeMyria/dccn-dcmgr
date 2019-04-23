@@ -54,6 +54,27 @@ func (s *SchedulerService) AddTask(task *TaskRecord) {
 
 }
 
+
+func (s *SchedulerService) AddNamespace(req *common_proto.DCStream) {
+	dcs, _ := s.db.GetAvaliableList()
+	if len(*dcs) > 0 {
+		dc := (*dcs)[0]
+		ns := req.GetNamespace()
+		ns.ClusterId = dc.Id
+		ns.ClusterName = dc.Name
+		event := common_proto.DCStream{
+			OpType:    common_proto.DCOperation_NS_CREATE,
+			OpPayload: &common_proto.DCStream_Namespace{Namespace: ns},
+		}
+		log.Printf("send namespace create msg to %s , %+v", ns.Name, ns)
+		s.publisher.Publish(&event)
+
+	}else{
+		log.Printf("not database avalible for namespace ")
+	}
+
+}
+
 func  UserRunningApplicationOnDataCenter(user_id string, cluster_id string) int {
 	  count := 65 // call api get
 	  return 1000 - count

@@ -19,8 +19,6 @@ func main() {
 			CpuLimit:     300,
 			MemLimit:     500,
 			StorageLimit: 10,
-			ClusterId: "123",
-			ClusterName:"zys",
 		}
 
 	report.Namespace = &namespace

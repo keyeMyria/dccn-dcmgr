@@ -33,7 +33,7 @@ func DataCenterFilter(task *TaskRecord, db dbservice.DBService) []DataCenterReco
 	}
 
 
-	dcs, _ := db.GetAll()
+	dcs, _ := db.GetAvaliableList()
 	micro2.Printf("avaliable datacenter %+v ", dcs)
 
 

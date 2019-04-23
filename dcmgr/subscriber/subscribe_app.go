@@ -20,6 +20,14 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
 	//   debug.PrintStack()
 	if req.OpType == common_proto.DCOperation_NS_CREATE || req.OpType == common_proto.DCOperation_NS_UPDATE || req.OpType == common_proto.DCOperation_NS_CANCEL {
 
+		if req.OpType == common_proto.DCOperation_NS_CREATE {
+			ns := req.GetNamespace()
+			if len(ns.ClusterId) == 0 { //need set clusterid
+				service := scheduler.GetSchedulerService()
+				service.AddNamespace(req)
+                return nil
+			}
+		}
 		p.dcFacadeDeploy.Publish(req)
 
 		micro2.Printf("send namespace create/update/cancel to  datacenter %+v ", req)
