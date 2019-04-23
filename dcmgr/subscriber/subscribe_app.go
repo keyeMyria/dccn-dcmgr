@@ -19,9 +19,10 @@ func New(c *handler.DataCenterStreamCaches, dcFacadeDeploy *micro2.Publisher) *S
 func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStream) error {
 	//   debug.PrintStack()
 	if req.OpType == common_proto.DCOperation_NS_CREATE || req.OpType == common_proto.DCOperation_NS_UPDATE || req.OpType == common_proto.DCOperation_NS_CANCEL {
+
 		p.dcFacadeDeploy.Publish(req)
 
-		micro2.Printf("send namespace update/cancel to  datacenter %+v ", req)
+		micro2.Printf("send namespace create/update/cancel to  datacenter %+v ", req)
 
 	}else{
 		task := req.GetAppDeployment()

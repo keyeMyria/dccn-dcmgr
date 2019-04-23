@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 	"time"
-
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/pgrpc"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
@@ -13,7 +13,19 @@ import (
 	"google.golang.org/grpc"
 )
 
-func (p *Relay) StartCollectStatus() {
+type HeartBeat struct {
+	taskFeedback *micro2.Publisher
+}
+
+func NewHeartBeat(feedback *micro2.Publisher) *HeartBeat {
+	handler := &HeartBeat{
+		taskFeedback: feedback,
+	}
+	return handler
+}
+
+
+func (p *HeartBeat) StartCollectStatus() {
 	for range time.Tick(20 * time.Second) {
 		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) {
 			// handle dial error

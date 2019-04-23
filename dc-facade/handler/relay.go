@@ -16,52 +16,26 @@ type Relay struct {
 	taskFeedback *micro2.Publisher
 }
 
-func New(feedback *micro2.Publisher) *Relay {
+func NewRelay(feedback *micro2.Publisher) *Relay {
 	handler := &Relay{
 		taskFeedback: feedback,
 	}
 	return handler
 }
 
-func (p *Relay) sendTestMsg(msg *common_proto.DCStream) {
-	report := common_proto.AppReport{}
-	app := msg.GetAppDeployment()
-	app.Namespace.ClusterName = "dc"
-	app.Namespace.ClusterId = "2e8556cb-17dd-4584-9adc-a58d36f92ce5"
-	app.Namespace.CreationDate = uint64(time.Now().Second())
-	report.AppDeployment = app
-	report.Report = "this is a fake msg for test"
-	report.AppStatus = common_proto.AppStatus_APP_RUNNING
 
-	event := common_proto.DCStream{
-		OpType:    common_proto.DCOperation_APP_CREATE,
-		OpPayload: &common_proto.DCStream_AppReport{AppReport: &report},
-	}
 
-	p.taskFeedback.Publish(&event)
-	log.Printf("SendTaskToDCMgr  %+v\n", event)
-}
-
-// UpdateTaskByFeedback receives task result from data center, returns to v1
-// UpdateTaskStatusByFeedback updates database status by performing feedback from the data center of the task.
-// sets executor's id, updates task status.
-func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (err error) {
+func (p *Relay)CreateApp(req *common_proto.DCStream) (err error){
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-
 	app := req.GetAppDeployment()
-	ns := req.GetNamespace()
-	report := req.GetAppReport()
-	log.Printf("dc manager service(hub) HandlerDeployEvnetFromDcMgr: Receive New Event: %+v %+v", *app, *ns)
 
 	appReport := &common_proto.DCStream_AppReport{
 		AppReport: &common_proto.AppReport{
 			AppDeployment: app,
 		},
 	}
-	if report == nil {
-		appReport.AppReport = report
-	}
+
 
 	appEvent := &common_proto.DCStream{
 		OpType:    req.OpType,
@@ -78,43 +52,53 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		OpPayload: namespaceReport,
 	}
 
-	defer func() {
-		if app != nil || ns != nil {
-			p.taskFeedback.Publish(namespaceEvent)
-		}
-		if app != nil {
-			p.taskFeedback.Publish(appEvent)
-		}
-		if report != nil {
-			p.taskFeedback.Publish(&common_proto.DCStream{
-				OpType:    common_proto.DCOperation_APP_DETAIL,
-				OpPayload: appReport,
-			})
-		}
-	}()
+	conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+	if err != nil {
+		log.Println(err)
+		appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
+		return err
+	}
+	defer conn.Close()
+
+	resp, err := dcmgr.NewDCClient(conn).CreateApp(ctx, app)
+	if err != nil {
+		log.Println(err)
+		appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
+		return err
+	} else {
+		log.Printf("create app respone  %+v \n", resp)
+		appReport.AppReport.AppEvent = resp.AppResult
+		appReport.AppReport.Report = resp.Message
+		namespaceReport.NsReport.NsEvent = resp.NsResult
+	}
+
+
+	p.taskFeedback.Publish(appEvent)
+	p.taskFeedback.Publish(namespaceEvent)
+	return nil
+
+}
+
+
+func (p *Relay)UpdateCancelDetailApp(req *common_proto.DCStream) (err error){
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	app := req.GetAppDeployment()
+
+	appReport := &common_proto.DCStream_AppReport{
+		AppReport: &common_proto.AppReport{
+			AppDeployment: app,
+		},
+	}
+
+
+	appEvent := &common_proto.DCStream{
+		OpType:    req.OpType,
+		OpPayload: appReport,
+	}
 
 	switch req.OpType {
-	case common_proto.DCOperation_APP_CREATE:
-		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
-		if err != nil {
-			log.Println(err)
-			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
-			return err
-		}
-		defer conn.Close()
-
-		resp, err := dcmgr.NewDCClient(conn).CreateApp(ctx, app)
-		if err != nil {
-			log.Println(err)
-			appReport.AppReport.AppEvent = common_proto.AppEvent_LAUNCH_APP_FAILED
-			return err
-		} else {
-			log.Printf("create app respone  %+v \n", resp)
-			appReport.AppReport.AppEvent = resp.AppResult
-			appReport.AppReport.Report = resp.Message
-			namespaceReport.NsReport.NsEvent = resp.NsResult
-		}
-
 	case common_proto.DCOperation_APP_UPDATE:
 		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
 		if err != nil {
@@ -133,7 +117,6 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			log.Printf("update app respone  %+v \n", resp)
 			appReport.AppReport.AppEvent = resp.AppResult
 			appReport.AppReport.Report = resp.Message
-			namespaceReport.NsReport.NsEvent = resp.NsResult
 		}
 
 	case common_proto.DCOperation_APP_CANCEL:
@@ -154,11 +137,55 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 			log.Printf("cancel app respone  %+v \n", resp)
 			appReport.AppReport.AppEvent = resp.AppResult
 			appReport.AppReport.Report = resp.Message
-			namespaceReport.NsReport.NsEvent = resp.NsResult
+		}
+	case common_proto.DCOperation_APP_DETAIL:
+		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		if err != nil {
+			log.Println(err)
+			return err
+		}
+		defer conn.Close()
+
+		resp, err := dcmgr.NewDCClient(conn).Status(ctx, &common_proto.AppID{
+			Id: app.Id,
+		})
+		if err != nil {
+			log.Println(err)
+			return err
 		}
 
+		log.Printf("collect app detail of %s respone  %+v \n", app.Id, resp)
+		appReport.AppReport.Detail = resp.Message
+
+	default:
+		log.Printf("process request error : request %+v \n", req)
+		log.Println(ankr_default.ErrUnknown.Error())
+		return ankr_default.ErrUnknown
+	}
+
+	p.taskFeedback.Publish(appEvent)
+	return nil
+}
+
+func (p *Relay)NamespaceProcess(req *common_proto.DCStream) (err error){
+	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+	defer cancel()
+
+	ns := req.GetNamespace()
+
+	namespaceReport := &common_proto.DCStream_NsReport{
+		NsReport: &common_proto.NamespaceReport{
+			Namespace: ns,
+		},
+	}
+	namespaceEvent := &common_proto.DCStream{
+		OpType:    common_proto.DCOperation_NS_CREATE,
+		OpPayload: namespaceReport,
+	}
+
+	switch req.OpType {
 	case common_proto.DCOperation_NS_CREATE:
-		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		conn, err := pgrpc.Dial(ns.ClusterId)
 		if err != nil {
 			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_LAUNCH_NS_FAILED
 			log.Println(err)
@@ -177,7 +204,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		namespaceReport.NsReport.NsEvent = resp.NsResult
 
 	case common_proto.DCOperation_NS_UPDATE:
-		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		conn, err := pgrpc.Dial(ns.ClusterId)
 		if err != nil {
 			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_UPDATE_NS_FAILED
 			log.Println(err)
@@ -196,7 +223,7 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		namespaceReport.NsReport.NsEvent = resp.NsResult
 
 	case common_proto.DCOperation_NS_CANCEL:
-		conn, err := pgrpc.Dial(app.Namespace.ClusterId)
+		conn, err := pgrpc.Dial(ns.ClusterId)
 		if err != nil {
 			namespaceReport.NsReport.NsEvent = common_proto.NamespaceEvent_CANCEL_NS_FAILED
 			log.Println(err)
@@ -214,52 +241,13 @@ func (p *Relay) HandlerDeploymentRequestFromDcMgr(req *common_proto.DCStream) (e
 		log.Printf("delete namespace respone  %+v \n", resp)
 		namespaceReport.NsReport.NsEvent = resp.NsResult
 
-	case common_proto.DCOperation_APP_DETAIL:
-		conn, err := pgrpc.Dial(report.AppDeployment.Namespace.ClusterId)
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-		defer conn.Close()
-
-		resp, err := dcmgr.NewDCClient(conn).Status(ctx, &common_proto.AppID{
-			Id: report.AppDeployment.Id,
-		})
-		if err != nil {
-			log.Println(err)
-			return err
-		}
-
-		log.Printf("collect app detail of %s respone  %+v \n", report.AppDeployment.Id, resp)
-		report.Detail = resp.Message
-
-	case common_proto.DCOperation_HEARTBEAT:
-		fallthrough
 	default:
 		log.Printf("process request error : request %+v \n", req)
 		log.Println(ankr_default.ErrUnknown.Error())
 		return ankr_default.ErrUnknown
+
 	}
 
-	// set event with new data
-	appEvent = &common_proto.DCStream{
-		OpType:    req.OpType,
-		OpPayload: appReport,
-	}
-
-	namespaceEvent = &common_proto.DCStream{
-		OpType:    common_proto.DCOperation_NS_CREATE,
-		OpPayload: namespaceReport,
-	}
-
-	log.Printf("send message to DataCenter  %+v", *app)
+	p.taskFeedback.Publish(namespaceEvent)
 	return nil
-}
-
-func toReport(resp *common_proto.AppResponce) *common_proto.AppReport {
-	return &common_proto.AppReport{
-		Report:   resp.Error,
-		AppEvent: resp.AppResult,
-		Detail:   resp.Message,
-	}
 }

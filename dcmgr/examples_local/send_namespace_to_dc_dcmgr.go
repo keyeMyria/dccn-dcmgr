@@ -19,6 +19,8 @@ func main() {
 			CpuLimit:     300,
 			MemLimit:     500,
 			StorageLimit: 10,
+			ClusterId: "123",
+			ClusterName:"zys",
 		}
 
 	report.Namespace = &namespace
@@ -29,7 +31,7 @@ func main() {
 
 	event := common_proto.DCStream{
 		OpType:    common_proto.DCOperation_NS_CREATE,
-		OpPayload: &common_proto.DCStream_NsReport{NsReport: report},
+		OpPayload: &common_proto.DCStream_Namespace{Namespace: &namespace},
 	}
 
 	log.Printf("messg %+v \n", &event)

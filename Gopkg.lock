@@ -2,7 +2,8 @@
 
 
 [[projects]]
-  digest = "1:0fb6608264910a4672b334f23047758ca09aa5e510aa8ff40b9a60f378f943c1"
+  branch = "feature/swdev-184-facade-gateway"
+  digest = "1:ad6b62583777635b56b3ae7aca733d7e5030305c375635ae6f2e9bb7c044524b"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -13,7 +14,7 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "f52f830cdf90e0783f0e442083d8e34a2bef15c6"
+  revision = "82fd0c156095ff735af7609f1d3b6640ee290cd2"
 
 [[projects]]
   branch = "master"
@@ -327,11 +328,11 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "df01cb2cc480549d72034218dd98bf97671450ac"
+  revision = "d864b10871cd4370fe574816b489c819c675ccc7"
 
 [[projects]]
   branch = "master"
-  digest = "1:de32e608e8efd56924af4a3c9d28918373f4d8621d1cf72996abf62826805086"
+  digest = "1:5af32d59e74926816761cb2ffada385a5d51ac8704e95af6943e6770477810c0"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -349,15 +350,15 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "1f3472d942ba824034fb77cab6a6cfc1bc8a2c3c"
+  revision = "afa5a82059c6356159f699d81beff22a81842231"
 
 [[projects]]
   branch = "master"
-  digest = "1:d53852c73a1e10a3b9f26554fdea3f3a30f01652bc963417eb1d4f7baab8ce33"
+  digest = "1:55565b142e38b7d00c39ce9a86fc70bbfa37c4f2f00d8ff2343f433c351db8e3"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "f0ce4c0180bef7e9c51babed693a6e47fdd8962f"
+  revision = "953cdadca894cdc07be76fc99f95b40c28f06623"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
