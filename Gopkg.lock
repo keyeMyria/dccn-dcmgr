@@ -2,7 +2,7 @@
 
 
 [[projects]]
-  branch = "feature/swdev-184-facade-gateway"
+  branch = "develop"
   digest = "1:ad6b62583777635b56b3ae7aca733d7e5030305c375635ae6f2e9bb7c044524b"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
@@ -14,15 +14,15 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "82fd0c156095ff735af7609f1d3b6640ee290cd2"
+  revision = "3fc438a25003e407626e241bf2a32aac90a7855a"
 
 [[projects]]
   branch = "master"
-  digest = "1:ef5b0622d834c139454148b8fd0c92bb314828900532b267ae62da9fec109866"
+  digest = "1:2210176f5644b328fb429f7d59b2944e598b22fda4b5071e09d6dcad001cdc37"
   name = "github.com/armon/go-metrics"
   packages = ["."]
   pruneopts = "UT"
-  revision = "f0300d1749da6fa982027e449ec0c7a145510c3c"
+  revision = "2801d9688273d5b516966851b9a0863b9e6b0652"
 
 [[projects]]
   digest = "1:4be5d1a52c61b74c0a4d62f37c0640f706ae6e07eb73617dd013990d565717d5"
@@ -332,7 +332,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:5af32d59e74926816761cb2ffada385a5d51ac8704e95af6943e6770477810c0"
+  digest = "1:705b25dc197e3942d74cd2d4134492fc93ea22760ca25048cd20d6ff43d1dadb"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -350,24 +350,26 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "afa5a82059c6356159f699d81beff22a81842231"
+  revision = "4829fb13d2c62012c17688fa7f629f371014946d"
 
 [[projects]]
   branch = "master"
-  digest = "1:55565b142e38b7d00c39ce9a86fc70bbfa37c4f2f00d8ff2343f433c351db8e3"
+  digest = "1:41aaf393ca0e2fa523e428b29f58fbc9a4bc9f975da5b9b1cac7cef1436a7b53"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "953cdadca894cdc07be76fc99f95b40c28f06623"
+  revision = "18eb32c0e2f0c2bc8d17842ed4ad41486f349ad4"
 
 [[projects]]
-  digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
+  digest = "1:f4ea3f623a07a2602bb9c1624d6dc7d291261278ba2484508fac559dc7926048"
   name = "golang.org/x/text"
   packages = [
     "collate",
     "collate/build",
     "internal/colltab",
     "internal/gen",
+    "internal/language",
+    "internal/language/compact",
     "internal/tag",
     "internal/triegen",
     "internal/ucd",
@@ -380,8 +382,8 @@
     "unicode/rangetable",
   ]
   pruneopts = "UT"
-  revision = "f21a4dfb5e38f5895301dc265a8def02365cc3d0"
-  version = "v0.3.0"
+  revision = "c942b20a5d85b458c4dce1589326051d85e25d6d"
+  version = "v0.3.1"
 
 [[projects]]
   branch = "master"
