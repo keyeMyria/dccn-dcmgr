@@ -1,15 +1,14 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: dc-facade
+  name: dcmgr
   labels:
-    app: dc-facade
+    app: dcmgr
 spec:
   ports:
     - port: 50051
       targetPort: 50051
       protocol: TCP
   selector:
-    app: dc-facade
-  type: LoadBalancer
-  externalTrafficPolicy: Local
+    app: dcmgr
+

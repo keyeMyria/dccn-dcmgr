@@ -31,11 +31,6 @@ jobs:
             chmod +x ./kubectl
             sudo mv ./kubectl /usr/local/bin/kubectl
       - run:
-          name: patch k8s yaml for email
-          command: |
-            kubectl set env deployment/email AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY --local -f kubernetes/email.yml -o yaml > kubernetes/email_patch.yml
-            mv kubernetes/email_patch.yml kubernetes/email.yml
-      - run:
           name: "Build & Push Docker Image"
           command: |
             set -x
@@ -71,7 +66,7 @@ jobs:
             echo "Getting all dependency"
             docker build --no-cache -f dockerfile/dep.Dockerfile  -t dccn-hub-dep:latest .
             docker create -ti --name dccn-hub-dep-container dccn-hub-dep bash
-            docker cp dccn-hub-dep-container:/go/src/github.com/Ankr-network/dccn-hub/vendor ./
+            docker cp dccn-hub-dep-container:/go/src/github.com/Ankr-network/dccn-dcmgr/vendor ./
             docker rm -fv dccn-hub-dep-container
 
             for((i=0; i<arrlen; i++)); do
@@ -81,8 +76,8 @@ jobs:
                 docker push $AWS_ACCOUNT.dkr.ecr.$AWS_REGION.amazonaws.com/${component_arr[$i]}:$TAG
               done
             done
-            declare -a deployment_arr=("taskmgr" "api" "usermgr" "email")
-            declare -a name_arr=("app-dccn-taskmgr" "app-dccn-api" "app-dccn-usermgr" "app-dccn-email")
+            declare -a deployment_arr=("dcmgr" "dc-facade" )
+            declare -a name_arr=("dccn-dcmgr" "dccn-dc-facade" )
 
             kops export kubecfg --name ${K8S_CLUSTER}.k8s.ankr.network --state s3://kops.${K8S_CLUSTER}.config
             for ((i=0; i<arrlen; i++)); do

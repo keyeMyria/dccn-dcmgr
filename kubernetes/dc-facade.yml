@@ -1,4 +1,4 @@
-dc-facadeVersion: apps/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
   name: dc-facade
@@ -13,10 +13,9 @@ spec:
         app: dc-facade
     spec:
         containers:
-        - name: app-dccn-dc-facade
-          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-hub-dc-facade:feat
+        - name: dccn-dc-facade
+          image: 815280425737.dkr.ecr.us-west-2.amazonaws.com/dccn-dc-facade:feat
           imagePullPolicy: Always
-          command: [ "/dc-facade" ]
           env:
           - name: DB_COLLECTION
             value: datacenter
