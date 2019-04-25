@@ -36,6 +36,10 @@ func DataCenterFilter(task *TaskRecord, db dbservice.DBService) []DataCenterReco
 	dcs, _ := db.GetAvaliableList()
 	micro2.Printf("avaliable datacenter %+v ", dcs)
 
+	if len(*dcs) == 0 {
+		return nil
+	}
+
 
 
 	for _, dc :=range *dcs {
@@ -83,6 +87,9 @@ func DataCenterFilter(task *TaskRecord, db dbservice.DBService) []DataCenterReco
 
 func DataCenterSelect(task *TaskRecord, db dbservice.DBService)string{
 	dclist := DataCenterFilter(task, db)
+	if dclist == nil {
+		return ""
+	}
 
 	priorityQueue := make(DataCenterPriorityQueue, 0)
 
