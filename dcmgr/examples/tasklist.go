@@ -17,7 +17,7 @@ package main
 //)
 //
 //var addr = "127.0.0.1:50052"
-////var addr = "client-dev.dccn.ankr.network:50051"
+////var addr = "client-dev.dccn.ankr.com:50051"
 //
 //func main() {
 //

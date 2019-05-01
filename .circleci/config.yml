@@ -42,16 +42,16 @@ jobs:
             then
               BRANCH_NAME="dev"
               K8S_CLUSTER="stage.hub"
-              APP_DOMAIN="app-stage.ankr.network"
+              APP_DOMAIN="app-stage.ankr.com"
             elif [[ ($BRANCH_NAME == "master") ]]
             then
               BRANCH_NAME="stage"
               K8S_CLUSTER="hub"
-              APP_DOMAIN="app.ankr.network"
+              APP_DOMAIN="app.ankr.com"
             else
               BRANCH_NAME="feat"
               K8S_CLUSTER="dev.hub"
-              APP_DOMAIN="app-dev.ankr.network"
+              APP_DOMAIN="app-dev.ankr.com"
             fi
 
             declare -a component_arr=("dccn-dcmgr" "dccn-dc-facade")

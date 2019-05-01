@@ -3,7 +3,9 @@ package main
 import (
 	"context"
 	"fmt"
+
 	"github.com/Ankr-network/dccn-common/protos/common"
+
 	//"github.com/Ankr-network/dccn-common/protos/taskmgr/v1/grpc"
 
 	"log"
@@ -12,12 +14,13 @@ import (
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
-
 	//	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	//	apiCommon "github.com/Ankr-network/dccn-hub/app-dccn-api/examples/common"
 )
+
 var addr = "dcmgr:50051"
-//var addr = "client-dev.dccn.ankr.network:50051"
+
+//var addr = "client-dev.dccn.ankr.com:50051"
 
 //var addr = "afcac29ea274711e99cb106bbae7419f-1982485008.us-west-1.elb.amazonaws.com:50051"
 
@@ -43,7 +46,7 @@ func main() {
 	//
 	//req := &usermgr.LoginRequest{}
 	//req.Email = "yousong1@gmail.com"
-    //req.Password = "111111c"
+	//req.Password = "111111c"
 	//
 	//
 	//
@@ -67,28 +70,28 @@ func main() {
 
 	//	log.Printf("refresh_token  %s  access_token %s", refresh_token, access_token)
 
-		md := metadata.New(map[string]string{
-			"token": "",
-		})
+	md := metadata.New(map[string]string{
+		"token": "",
+	})
 
-		//log.Printf("get access_token after login %s \n", access_token)
-		ctx := metadata.NewOutgoingContext(context.Background(), md)
+	//log.Printf("get access_token after login %s \n", access_token)
+	ctx := metadata.NewOutgoingContext(context.Background(), md)
 
-		tokenContext, cancel := context.WithTimeout(ctx, 10*time.Second)
-		defer cancel()
+	tokenContext, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
 
-		// var userTasks []*common_proto.Task
-		if rsp, err := dcClient.DataCenterList(tokenContext, &common_proto.Empty{}); err != nil {
-			log.Fatal(err.Error())
-		} else {
+	// var userTasks []*common_proto.Task
+	if rsp, err := dcClient.DataCenterList(tokenContext, &common_proto.Empty{}); err != nil {
+		log.Fatal(err.Error())
+	} else {
 
-			fmt.Print("this is a new test")
+		fmt.Print("this is a new test")
 
-			for i := 0; i < len(rsp.DcList); i++ {
-				d := rsp.DcList[i]
-				fmt.Printf("task list id %s name %s lat %s lng %s cournty %s \n", d.Id, d.Name, d.GeoLocation.Lng, d.GeoLocation.Lng, d.GeoLocation.Country)
-			}
-
+		for i := 0; i < len(rsp.DcList); i++ {
+			d := rsp.DcList[i]
+			fmt.Printf("task list id %s name %s lat %s lng %s cournty %s \n", d.Id, d.Name, d.GeoLocation.Lng, d.GeoLocation.Lng, d.GeoLocation.Country)
 		}
+
+	}
 	//}
 }
