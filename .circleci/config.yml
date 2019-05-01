@@ -88,3 +88,8 @@ jobs:
                 kubectl rollout undo deploy/${deployment_arr[$i]}
               fi
             done
+
+
+
+            kubectl apply -f  kubernetes/dc-svc.yml
+            kubectl apply -f  kubernetes/dc-facade-svc.yml
