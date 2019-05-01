@@ -14,7 +14,7 @@ import (
 
 var addr = "localhost:50051"
 
-//var addr = "client-dev.dccn.ankr.network:50051"
+//var addr = "client-dev.dccn.ankr.com:50051"
 
 //var addr = "afcac29ea274711e99cb106bbae7419f-1982485008.us-west-1.elb.amazonaws.com:50051"
 
@@ -83,7 +83,7 @@ func main() {
 
 		for i := 0; i < len(rsp.DcList); i++ {
 			d := rsp.DcList[i]
-			fmt.Printf("task list id %s name %s \n",   d.Id, d.Name)
+			fmt.Printf("task list id %s name %s \n", d.Id, d.Name)
 			//fmt.Printf("task list id %s name %s lat %s lng %s cournty %s \n", d.Id, d.Name, d.GeoLocation.Lng, d.GeoLocation.Lng, d.GeoLocation.Country)
 		}
 
