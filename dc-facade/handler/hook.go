@@ -2,28 +2,26 @@ package handler
 
 import (
 	"log"
-	"net"
+
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/pgrpc"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 )
 
-type PGRPCCallBack struct {
+type PgrpcHook struct {
 	taskFeedback *micro2.Publisher
+	*pgrpc.ProxyProtoHook
 }
 
-func NewPGRPCCallBack(feedback *micro2.Publisher) *PGRPCCallBack {
-	handler := &PGRPCCallBack{
-		taskFeedback: feedback,
+func NewPgrpcHook(feedback *micro2.Publisher) *PgrpcHook {
+	handler := &PgrpcHook{
+		taskFeedback:   feedback,
+		ProxyProtoHook: &pgrpc.ProxyProtoHook{},
 	}
 	return handler
 }
 
-
-func (p *PGRPCCallBack) OnAccept(key string, conn net.Conn) error      { return nil }
-func (p *PGRPCCallBack) OnBuild(key string, conn *pgrpc.Session) error { return nil }
-
-func (p *PGRPCCallBack) OnClose(key string, conn *pgrpc.Session) {
+func (p *PgrpcHook) OnClose(key string, conn *pgrpc.Session) {
 	log.Printf("public %s close message", key)
 
 	p.taskFeedback.Publish(&common_proto.DCStream{
