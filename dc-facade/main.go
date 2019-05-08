@@ -21,9 +21,7 @@ func main() {
 	sendToDcMgr := micro2.NewPublisher("FromDCFacadeToDCMgr")
 	subscriber := subscriber.New(sendToDcMgr)
 	heartbeat := handler.NewHeartBeat(sendToDcMgr)
-	callback := handler.NewPGRPCCallBack(sendToDcMgr)
-
-
+	callback := handler.NewPgrpcHook(sendToDcMgr)
 
 	if err := micro2.RegisterSubscriber("FromDcMgrToDcFacade", subscriber); err != nil {
 		log.Fatalln(err)

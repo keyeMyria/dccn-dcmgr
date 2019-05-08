@@ -3,10 +3,11 @@
 
 [[projects]]
   branch = "develop"
-  digest = "1:ad6b62583777635b56b3ae7aca733d7e5030305c375635ae6f2e9bb7c044524b"
+  digest = "1:96a2e1d5bcfd0f73686c323449a45a148b5d647c9d3da0645724e297d518e450"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
+    "cert",
     "pgrpc",
     "protos",
     "protos/common",
@@ -14,15 +15,15 @@
     "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "3fc438a25003e407626e241bf2a32aac90a7855a"
+  revision = "0082c0f2daa3923c9feab80abde058ab49e2169e"
 
 [[projects]]
   branch = "master"
-  digest = "1:2210176f5644b328fb429f7d59b2944e598b22fda4b5071e09d6dcad001cdc37"
+  digest = "1:7a9140c806333a78122763d08ec6c0d7358c7fff1df8cfbb01881c5dc46e24e5"
   name = "github.com/armon/go-metrics"
   packages = ["."]
   pruneopts = "UT"
-  revision = "2801d9688273d5b516966851b9a0863b9e6b0652"
+  revision = "ec5e00d3c878b2a97bbe0884ef45ffd1b4f669f5"
 
 [[projects]]
   digest = "1:4be5d1a52c61b74c0a4d62f37c0640f706ae6e07eb73617dd013990d565717d5"
@@ -102,12 +103,12 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:eba7a1f788fdd3bb76d724ea169217bb868df102e4314cce0310c56f09f62435"
+  digest = "1:5d8539af558ca2ea960a4c11afb12c75ae9e9dca3560f1103318aaa2030e37e2"
   name = "github.com/hashicorp/go-msgpack"
   packages = ["codec"]
   pruneopts = "UT"
-  revision = "c4a1f61d43c2788b8b6fd55304f01a96863eec94"
-  version = "v0.5.4"
+  revision = "ad60660ecf9c5a1eae0ca32182ed72bab5807961"
+  version = "v0.5.5"
 
 [[projects]]
   digest = "1:f668349b83f7d779567c880550534addeca7ebadfdcf44b0b9c39be61864b4b7"
@@ -256,12 +257,12 @@
   version = "v0.2.0"
 
 [[projects]]
-  digest = "1:2b4b4b2e5544c2a11a486c1b631357aa2ddf766e50c1b2483cf809da2c511234"
+  digest = "1:3a3bc3c022d600ed4aced1d220d92c80bf3e42ff5acf95b59839f7af9ac53346"
   name = "github.com/miekg/dns"
   packages = ["."]
   pruneopts = "UT"
-  revision = "73601d4aed9d844322611759d7f3619110b7c88e"
-  version = "v1.1.8"
+  revision = "8aa92d4e02c501ba21e26fb92cf2fb9f23f56917"
+  version = "v1.1.9"
 
 [[projects]]
   digest = "1:5d231480e1c64a726869bc4142d270184c419749d34f167646baa21008eb0a79"
@@ -328,7 +329,7 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "d864b10871cd4370fe574816b489c819c675ccc7"
+  revision = "e1dfcc566284e143ba8f9afbb3fa563f2a0d212b"
 
 [[projects]]
   branch = "master"
@@ -350,18 +351,18 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "4829fb13d2c62012c17688fa7f629f371014946d"
+  revision = "f4e77d36d62c17c2336347bb2670ddbd02d092b7"
 
 [[projects]]
   branch = "master"
-  digest = "1:41aaf393ca0e2fa523e428b29f58fbc9a4bc9f975da5b9b1cac7cef1436a7b53"
+  digest = "1:1292d43f91d32009a4afb7348ea3f84afd8be53c076d78c89f246781eb06e03f"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "18eb32c0e2f0c2bc8d17842ed4ad41486f349ad4"
+  revision = "ecd444e8653b66b20d764e53c22e3e615eea5fae"
 
 [[projects]]
-  digest = "1:f4ea3f623a07a2602bb9c1624d6dc7d291261278ba2484508fac559dc7926048"
+  digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
   name = "golang.org/x/text"
   packages = [
     "collate",
@@ -382,8 +383,8 @@
     "unicode/rangetable",
   ]
   pruneopts = "UT"
-  revision = "c942b20a5d85b458c4dce1589326051d85e25d6d"
-  version = "v0.3.1"
+  revision = "342b2e1fbaa52c93f31447ad2c6abc048c63e475"
+  version = "v0.3.2"
 
 [[projects]]
   branch = "master"
@@ -391,7 +392,7 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "e7d98fc518a78c9f8b5ee77be7b0b317475d89e1"
+  revision = "54afdca5d873f7b529e2ce3def1a99df16feda90"
 
 [[projects]]
   digest = "1:305ae1b02020aa7bd0bf7c51eb20cec7fec7d813c8b37e517ac588963fedd43d"
@@ -455,6 +456,7 @@
   analyzer-version = 1
   input-imports = [
     "github.com/Ankr-network/dccn-common/ankr-micro",
+    "github.com/Ankr-network/dccn-common/cert",
     "github.com/Ankr-network/dccn-common/pgrpc",
     "github.com/Ankr-network/dccn-common/protos",
     "github.com/Ankr-network/dccn-common/protos/common",
