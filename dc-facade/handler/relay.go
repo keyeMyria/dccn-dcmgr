@@ -147,14 +147,14 @@ func (p *Relay)UpdateCancelDetailApp(req *common_proto.DCStream) (err error){
 		defer conn.Close()
 
 		resp, err := dcmgr.NewDCClient(conn).Status(ctx, &common_proto.AppID{
-			Id: app.Id,
+			AppId: app.AppId,
 		})
 		if err != nil {
 			log.Println(err)
 			return err
 		}
 
-		log.Printf("collect app detail of %s respone  %+v \n", app.Id, resp)
+		log.Printf("collect app detail of %s respone  %+v \n", app.AppId, resp)
 		appReport.AppReport.Detail = resp.Message
 
 	default:

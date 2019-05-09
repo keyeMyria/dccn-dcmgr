@@ -8,7 +8,7 @@ import (
 	"log"
 	"time"
 
-	taskmgr "github.com/Ankr-network/dccn-common/protos/taskmgr/v1/grpc"
+	taskmgr "github.com/Ankr-network/dccn-common/protos/appmgr/v1/grpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 

@@ -11,7 +11,7 @@ type DCFacade struct {
 	handler *handler.DcMgrHandler
 }
 
-func NewEventFromDCFacade(c *handler.DataCenterStreamCaches, handler *handler.DcMgrHandler) *DCFacade {
+func NewEventFromDCFacade(handler *handler.DcMgrHandler) *DCFacade {
 	return &DCFacade{handler: handler}
 }
 

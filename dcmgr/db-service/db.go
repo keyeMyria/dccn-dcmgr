@@ -12,8 +12,11 @@ type DBService interface {
 	Get(id string) (*common_proto.DataCenterStatus, error)
 	// Get gets a dc item by pb's name.
 	GetByName(name string) (*common_proto.DataCenterStatus, error)
+	GetByUserID(uid string) (*common_proto.DataCenterStatus, error)
+	GetByID(id string) (*DataCenterRecord, error)
 	// Create Creates a new dc item if not exits.
-	Create(center *common_proto.DataCenterStatus) error
+	Create(center *DataCenterRecord) error
+	Reset(clusterID string, center *DataCenterRecord) error
 	// GetAll gets all task related to user id.
 	GetAll() (*[]*common_proto.DataCenterStatus, error)
 	GetAvaliableList() (*[]*common_proto.DataCenterStatus, error)
@@ -25,6 +28,17 @@ type DBService interface {
     UpdateClientCert(clusterID string, clientcert string) error
 	// Close closes db connection
 	Close()
+}
+
+type DataCenterRecord struct{
+	DcId                 string
+	ClusterName          string
+	GeoLocation          *common_proto.GeoLocation
+	DcStatus               common_proto.DCStatus
+	DcAttributes         *common_proto.DataCenterAttributes
+	DcHeartbeatReport    *common_proto.DCHeartbeatReport
+	UserId                  string
+	Clientcert           string
 }
 
 // UserDB implements DBService
@@ -47,51 +61,74 @@ func (p *DB) Close() {
 // Get gets user item by id.
 func (p *DB) Get(id string) (*common_proto.DataCenterStatus, error) {
 	var center common_proto.DataCenterStatus
-	err := p.collection.Find(bson.M{"id": id}).One(&center)
+	err := p.collection.Find(bson.M{"dcid": id}).One(&center)
 	return &center, err
+}
+
+// Get gets user item by id.
+func (p *DB) GetByID(id string) (*DataCenterRecord, error) {
+	var record DataCenterRecord
+	err := p.collection.Find(bson.M{"dcid": id}).One(&record)
+	return &record, err
 }
 
 // Get gets user item by name.
 func (p *DB) GetByName(name string) (*common_proto.DataCenterStatus, error) {
 	var center common_proto.DataCenterStatus
-	err := p.collection.Find(bson.M{"name": name}).One(&center)
+	err := p.collection.Find(bson.M{"clustername": name}).One(&center)
+	return &center, err
+}
+
+func (p *DB)GetByUserID(uid string) (*common_proto.DataCenterStatus, error){
+	var center common_proto.DataCenterStatus
+	err := p.collection.Find(bson.M{"userid": uid}).One(&center)
 	return &center, err
 }
 
 // Create creates a new data center item if it not exists
-func (p *DB) Create(center *common_proto.DataCenterStatus) error {
+func (p *DB) Create(center *DataCenterRecord) error {
 	return p.collection.Insert(center)
 }
 
-// Update updates user item.
-func (p *DB) Update(datacenter *common_proto.DataCenterStatus) error {
+func (p *DB) Reset(clusterID string, datacenter *DataCenterRecord) error {
 	return p.collection.Update(
-		bson.M{"id": datacenter.Id},
+		bson.M{"dcid": clusterID},
 		bson.M{"$set": bson.M{
-			"status": datacenter.Status,
+			"clustername": datacenter.ClusterName,
+			"clientcert": datacenter.Clientcert,
+			"userid" : datacenter.UserId,
+			"dcstatus": datacenter.DcStatus,
 			"Report":  datacenter.DcHeartbeatReport.Report,
 			"Metrics": datacenter.DcHeartbeatReport.Metrics}})
-		return nil
+}
+
+
+func (p *DB) Update(datacenter *common_proto.DataCenterStatus) error {
+	return p.collection.Update(
+		bson.M{"dcid": datacenter.DcId},
+		bson.M{"$set": bson.M{
+			"dcstatus": datacenter.DcStatus,
+			"Report":  datacenter.DcHeartbeatReport.Report,
+			"Metrics": datacenter.DcHeartbeatReport.Metrics}})
 }
 
 // Update updates user item.
 func (p *DB) UpdateName(id string, name string) error {
 	return p.collection.Update(
-		bson.M{"id": id},
+		bson.M{"dcid": id},
 		bson.M{"$set": bson.M{
 			"Name":  name}})
-	return nil
 }
 
 func (p *DB) UpdateStatus(clusterID string, status common_proto.DCStatus) error {
 	return p.collection.Update(
-		bson.M{"id": clusterID},
+		bson.M{"dcid": clusterID},
 		bson.M{"$set": bson.M{"status": status}})
 }
 
 func (p *DB) UpdateClientCert(clusterID string, clientcert string) error {
 	return p.collection.Update(
-		bson.M{"id": clusterID},
+		bson.M{"dcid": clusterID},
 		bson.M{"$set": bson.M{"clientcert": clientcert}})
 }
 
@@ -107,7 +144,7 @@ func (p *DB) GetAll() (*[]*common_proto.DataCenterStatus, error) {
 
 func (p *DB) GetAvaliableList() (*[]*common_proto.DataCenterStatus, error) {
 	var dcs []*common_proto.DataCenterStatus
-	if err := p.collection.Find(bson.M{"status" : common_proto.DCStatus_AVAILABLE}).All(&dcs); err != nil {
+	if err := p.collection.Find(bson.M{"dcstatus" : common_proto.DCStatus_AVAILABLE}).All(&dcs); err != nil {
 		return nil, err
 	}
 

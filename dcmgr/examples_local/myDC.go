@@ -46,7 +46,7 @@ func main() {
 	defer cancel()
 
 	// var userTasks []*common_proto.Task
-	if rsp, err := dcClient.RegisterDataCenter(tokenContext, &dcmgr.RegisterDataCenterRequest{UserId:"xxxx123", ClusterName:"testDC"}); err != nil {
+	if rsp, err := dcClient.RegisterDataCenter(tokenContext, &dcmgr.RegisterDataCenterRequest{UserId:"xxxx111123", ClusterName:"testDC"}); err != nil {
 		log.Fatal(err.Error())
 	} else {
 
