@@ -50,12 +50,12 @@ func startHandler() {
 
 	dcHandler := handler.New(db, taskFeedback)
 
-	if err := micro2.RegisterSubscriber(ankr_default.MQDeployApp, subscriber.New(dcHandler.DcStreamCaches, dcFacadeDeploy)); err != nil {
+	if err := micro2.RegisterSubscriber(ankr_default.MQDeployApp, subscriber.New(dcFacadeDeploy)); err != nil {
 		log.Fatal(err.Error())
 	}
 
 	//from
-	if err := micro2.RegisterSubscriber("FromDCFacadeToDCMgr", subscriber.NewEventFromDCFacade(dcHandler.DcStreamCaches, dcHandler)); err != nil {
+	if err := micro2.RegisterSubscriber("FromDCFacadeToDCMgr", subscriber.NewEventFromDCFacade(dcHandler)); err != nil {
 		log.Fatal(err.Error())
 	}
 

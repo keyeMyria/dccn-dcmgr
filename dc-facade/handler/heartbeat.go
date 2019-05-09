@@ -2,24 +2,27 @@ package handler
 
 import (
 	"context"
+	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
+	sign "github.com/Ankr-network/dccn-common/cert/sign"
+	"github.com/Ankr-network/dccn-common/pgrpc"
+	"github.com/Ankr-network/dccn-common/protos/common"
+	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
+	"google.golang.org/grpc"
 	"log"
 	"time"
-	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
-	"github.com/Ankr-network/dccn-common/pgrpc"
-	common_proto "github.com/Ankr-network/dccn-common/protos/common"
-	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	"github.com/Ankr-network/dccn-dcmgr/dc-facade/dbservice"
-	"github.com/google/uuid"
-	"google.golang.org/grpc"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 )
 
 type HeartBeat struct {
 	taskFeedback *micro2.Publisher
+	db dbservice.DBService
 }
 
 func NewHeartBeat(feedback *micro2.Publisher) *HeartBeat {
+	dbInstance, _ := dbservice.New()
 	handler := &HeartBeat{
 		taskFeedback: feedback,
+		db: dbInstance,
 	}
 	return handler
 }
@@ -27,57 +30,21 @@ func NewHeartBeat(feedback *micro2.Publisher) *HeartBeat {
 
 func (p *HeartBeat) StartCollectStatus() {
 	for range time.Tick(20 * time.Second) {
-		pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) {
-			// handle dial error
-			if err != nil {
-				log.Println(err)
-				return
-			}
-			defer conn.Close()
+        p.CheckEachDatacenterConnections()
+		log.Printf("heartbeat finish")
+	}
+}
 
-			// collect status(heartbeat)
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
-			defer cancel()
 
-			log.Println("collecting status of key ", key)
-			status, err := dcmgr.NewDCClient(conn).Overview(ctx, &common_proto.Empty{})
-			if err != nil {
-				log.Println(err)
-				return
-			}
+func (p *HeartBeat) CheckEachDatacenterConnections(){
+	pgrpc.Each(func(key string, conn *grpc.ClientConn, err error) {
+		// handle dial error
+		status, ok := p.CheckDatacenterConnectionOK(key, conn, err)
 
-			// FIXME: transaction
-			// update status into db
-			if status.Id == "" {
-				// data center dose not exist, register it
-				lat, lng, country := dbservice.GetLatLng(key)
-				status.GeoLocation = &common_proto.GeoLocation{Lat: lat, Lng: lng, Country: country}
-
-				{ // init new dc id
-					status.Id = uuid.New().String()
-					status.Name = "mock_name"
-					ts := uint64(time.Now().UTC().Unix())
-
-					log.Println("initing dc of key ", key)
-					if _, err := dcmgr.NewDCClient(conn).InitDC(ctx, &common_proto.DataCenter{
-						Id:   status.Id,
-						Name: status.Name,
-						DcAttributes: &common_proto.DataCenterAttributes{
-							CreationDate:     ts,
-							LastModifiedDate: ts,
-						},
-					}); err != nil {
-						log.Printf("init new datacenter fail: %s", err)
-						return
-					}
-
-					log.Printf("added new datacenter: %s", status.Name)
-				}
-			}
-
-			if key != status.Id {
-				log.Printf("alias %s into %s", key, status.Id)
-				pgrpc.Alias(key, status.Id, true)
+		if ok {
+			if key != status.DcId {
+				log.Printf("alias %s into %s", key, status.DcId)
+				pgrpc.Alias(key, status.DcId, true)
 			}
 
 			event := common_proto.DCStream{
@@ -89,8 +56,50 @@ func (p *HeartBeat) StartCollectStatus() {
 
 			log.Println("publishing status of key ", key)
 			p.taskFeedback.Publish(&event)
-		})
+		}
+	})
+}
 
-		log.Printf("heartbeat finish")
+func (p *HeartBeat) CheckDatacenterConnectionOK(key string, conn *grpc.ClientConn, err error) (*common_proto.DataCenterStatus,  bool) {
+	if err != nil {
+		log.Println(err)
+		return nil, false
 	}
+	defer conn.Close()
+
+	// collect status(heartbeat)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	log.Println("collecting status of key ", key)
+	timestamp := time.Now()
+	timestampStr := timestamp.String()
+	micro2.WriteLog("timestampe " + timestampStr)
+	rsp, err := dcmgr.NewDCClient(conn).Overview(ctx, &dcmgr.DCOverviewRequest{Timestamp: timestampStr})
+	if err != nil {
+		log.Println(err)
+		return nil, false
+	}
+
+	dcID := rsp.ClusterId
+	status, _ := p.db.GetByID(dcID)
+
+    client_cert := status.Clientcert
+
+	if sign.RsaVerify(client_cert, timestampStr, rsp.Signature) {
+		log.Printf("pass RsaVerify  timestampStr  %s %s %s  \n", client_cert, timestampStr, rsp.Signature)
+	}else{
+		log.Printf("not pass RsaVerify \n")
+	}
+
+
+
+	// FIXME: transaction
+	// update status into db
+	if rsp.ClusterId == "" {
+		log.Printf("error for datacenter id does not exist")
+		return nil, false
+	}
+
+	return rsp.Status, true
 }

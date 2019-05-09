@@ -45,8 +45,8 @@ func DataCenterFilter(task *TaskRecord, db dbservice.DBService) []DataCenterReco
 	for _, dc :=range *dcs {
 		//check remain resource
 		record := DataCenterRecord{}
-		record.Name = dc.Name
-		record.ID = dc.Id
+		record.Name = dc.DcName
+		record.ID = dc.DcId
 		record.CPU = 2000
 		record.Disk = 2000
 		record.Memory = 3000
@@ -63,11 +63,11 @@ func DataCenterFilter(task *TaskRecord, db dbservice.DBService) []DataCenterReco
 			record.Disk = metrics.TotalStorage - metrics.UsedStorage
 		}
 
-		if record.CPU > int64(task.Namespace.CpuLimit) &&
-			record.Memory > int64(task.Namespace.MemLimit) &&
-			record.Disk > int64(task.Namespace.StorageLimit) {
+		if record.CPU > int64(task.Namespace.NsCpuLimit) &&
+			record.Memory > int64(task.Namespace.NsMemLimit) &&
+			record.Disk > int64(task.Namespace.NsStorageLimit) {
 			list = append(list, record)
-			micro2.Printf("insert datacenter to DataCenterFilter list %s", dc.Id)
+			micro2.Printf("insert datacenter to DataCenterFilter list %s", dc.DcId)
 		}else{
 			//micro2.Printf(" datacenter %s not matching namespace %d %d %d   --> source requirement %d %d %d ", dc.Id,
 			//	task.Namespace.CpuLimit, task.Namespace.MemLimit, task.Namespace.StorageLimit, record.CPU, record.Memory, record.Disk)

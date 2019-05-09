@@ -28,8 +28,8 @@ func (p *PgrpcHook) OnClose(key string, conn *pgrpc.Session) {
 		OpType: common_proto.DCOperation_HEARTBEAT,
 		OpPayload: &common_proto.DCStream_DataCenter{
 			DataCenter: &common_proto.DataCenterStatus{
-				Id:     key,
-				Status: common_proto.DCStatus_UNAVAILABLE,
+				DcId:     key,
+				DcStatus: common_proto.DCStatus_UNAVAILABLE,
 			},
 		},
 	})

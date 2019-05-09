@@ -3,19 +3,20 @@
 
 [[projects]]
   branch = "develop"
-  digest = "1:96a2e1d5bcfd0f73686c323449a45a148b5d647c9d3da0645724e297d518e450"
+  digest = "1:6ce65bcbe1fc74434f5dcad3021422c41867fe86323ea571a8558821baca1e27"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
     "cert",
+    "cert/sign",
     "pgrpc",
     "protos",
+    "protos/appmgr/v1/grpc",
     "protos/common",
     "protos/dcmgr/v1/grpc",
-    "protos/taskmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "0082c0f2daa3923c9feab80abde058ab49e2169e"
+  revision = "7462ed67577ee16a3a3a555e9b705b23bb428dbb"
 
 [[projects]]
   branch = "master"
@@ -355,11 +356,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:1292d43f91d32009a4afb7348ea3f84afd8be53c076d78c89f246781eb06e03f"
+  digest = "1:4fc43e824f7e546353de724c00507b1d9c0bab56344b10c2330a97f166a0fba7"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "ecd444e8653b66b20d764e53c22e3e615eea5fae"
+  revision = "2d0786266e9cd132da844109aa05016f11f3df28"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -388,11 +389,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:c3076e7defee87de1236f1814beb588f40a75544c60121e6eb38b3b3721783e2"
+  digest = "1:fc5df4cb84cdf639ef702c176a50a9ee08ea3e68ebd67519c0f4f963c7d82978"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "54afdca5d873f7b529e2ce3def1a99df16feda90"
+  revision = "b515fa19cec88c32f305a962f34ae60068947aea"
 
 [[projects]]
   digest = "1:305ae1b02020aa7bd0bf7c51eb20cec7fec7d813c8b37e517ac588963fedd43d"
@@ -457,11 +458,12 @@
   input-imports = [
     "github.com/Ankr-network/dccn-common/ankr-micro",
     "github.com/Ankr-network/dccn-common/cert",
+    "github.com/Ankr-network/dccn-common/cert/sign",
     "github.com/Ankr-network/dccn-common/pgrpc",
     "github.com/Ankr-network/dccn-common/protos",
+    "github.com/Ankr-network/dccn-common/protos/appmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
-    "github.com/Ankr-network/dccn-common/protos/taskmgr/v1/grpc",
     "github.com/google/uuid",
     "github.com/micro/go-plugins/broker/rabbitmq",
     "golang.org/x/net/context",
