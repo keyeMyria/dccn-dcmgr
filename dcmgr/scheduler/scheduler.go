@@ -63,7 +63,7 @@ func (s *SchedulerService) AddNamespace(req *common_proto.DCStream) {
 		dc := (*dcs)[0]
 		ns := req.GetNamespace()
 		ns.ClusterId = dc.DcId
-		ns.ClusterName = dc.DcName
+		ns.ClusterName = dc.ClusterName
 		event := common_proto.DCStream{
 			OpType:    common_proto.DCOperation_NS_CREATE,
 			OpPayload: &common_proto.DCStream_Namespace{Namespace: ns},
@@ -92,7 +92,7 @@ func UserRunningApplicationOnDataCenter(user_id string, cluster_id string) int {
 
 	appClient := app.NewAppMgrClient(conn)
 
-	if rsp, err := appClient.AppCount(context.Background(), &app.AppCountRequest{UserId: user_id, ClusterId: cluster_id}); err != nil {
+	if rsp, err := appClient.AppCount(context.Background(), &app.AppCountRequest{Uid: user_id, ClusterId: cluster_id}); err != nil {
 		log.Printf("error when call AppCount %s \n" + err.Error())
 	} else {
 		count = int(rsp.AppCount)
@@ -156,7 +156,7 @@ func (s *SchedulerService) getDatacenterName(datacenterId string) string {
 	if err != nil {
 		return ""
 	} else {
-		return record.DcName
+		return record.ClusterName
 	}
 
 }

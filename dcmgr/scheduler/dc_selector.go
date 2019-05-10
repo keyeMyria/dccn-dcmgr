@@ -45,7 +45,7 @@ func DataCenterFilter(task *TaskRecord, db dbservice.DBService) []DataCenterReco
 	for _, dc :=range *dcs {
 		//check remain resource
 		record := DataCenterRecord{}
-		record.Name = dc.DcName
+		record.Name = dc.ClusterName
 		record.ID = dc.DcId
 		record.CPU = 2000
 		record.Disk = 2000

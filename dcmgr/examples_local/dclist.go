@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var addr = "localhost:50051"
+var addr = "localhost:50052"
 
 //var addr = "client-dev.dccn.ankr.com:50051"
 
@@ -36,33 +36,7 @@ func main() {
 	}(conn)
 
 	dcClient := dcmgr.NewDCAPIClient(conn)
-	//userClient := usermgr.NewUserMgrClient(conn)
-	//
-	//req := &usermgr.LoginRequest{}
-	//req.Email = "yousong1@gmail.com"
-	//req.Password = "111111c"
-	//
-	//
-	//
-	////var userId string
-	//if rsp, err := userClient.Login(context.TODO(), &usermgr.LoginRequest{Email: req.Email, Password: req.Password}); err != nil {
-	//	if err == ankr_default.ErrPasswordError {
-	//		log.Printf("password error  %s", err.Error())
-	//	}
-	//
-	//
-	//	a := err.Error()
-	//
-	//	log.Printf(">>>>>%d  %s <<<<", len(a), a)
-	//} else {
-	//	log.Printf("response %+v \n", rsp)
-	//	//log.Printf("login Success: id : %s name : %s , email %s  refresh_token : %s  access_token %s \n", rsp.User.Id, rsp.User.Attributes.Name, rsp.User.Email ,rsp.AuthenticationResult.RefreshToken, rsp.AuthenticationResult.AccessToken)
-	//	//token = rsp.Token
-	//	//userId = rsp.UserId
-	//	refresh_token := rsp.AuthenticationResult.RefreshToken
-	//	access_token := rsp.AuthenticationResult.AccessToken
 
-	//	log.Printf("refresh_token  %s  access_token %s", refresh_token, access_token)
 
 	md := metadata.New(map[string]string{
 		"token": "",
@@ -78,12 +52,9 @@ func main() {
 	if rsp, err := dcClient.DataCenterList(tokenContext, &common_proto.Empty{}); err != nil {
 		log.Fatal(err.Error())
 	} else {
-
-		fmt.Print("this is a new test")
-
 		for i := 0; i < len(rsp.DcList); i++ {
 			d := rsp.DcList[i]
-			fmt.Printf("task list id %s name %s \n", d.Id, d.Name)
+			fmt.Printf("task list id %s name %s %+v \n", d.DcId, d.DcName, d)
 			//fmt.Printf("task list id %s name %s lat %s lng %s cournty %s \n", d.Id, d.Name, d.GeoLocation.Lng, d.GeoLocation.Lng, d.GeoLocation.Country)
 		}
 

@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var addr = "localhost:50052"
+var addr = "localhost:50051"
 
 //var addr = "client-dev.dccn.ankr.com:50051"
 
@@ -46,7 +46,7 @@ func main() {
 	defer cancel()
 
 	// var userTasks []*common_proto.Task
-	if rsp, err := dcClient.RegisterDataCenter(tokenContext, &dcmgr.RegisterDataCenterRequest{UserId:"xxxx123", ClusterName:"testDC"}); err != nil {
+	if rsp, err := dcClient.RegisterDataCenter(tokenContext, &dcmgr.RegisterDataCenterRequest{UserId:"xxxx123", ClusterName:"demo-cluster"}); err != nil {
 		log.Fatal(err.Error())
 	} else {
 

@@ -4,6 +4,7 @@ import (
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
+	"log"
 )
 
 type DcMgrHandler struct {
@@ -30,7 +31,7 @@ func (p *DcMgrHandler) UpdateTask(stream *common_proto.DCStream) {
 
 func (p *DcMgrHandler) UpdateDataCenter(dc_status *common_proto.DataCenterStatus) error {
 	// first update database
-	//log.Printf("into updateDataCenter  : %v ", dc)
+
 	if dc_status.DcStatus == common_proto.DCStatus_UNAVAILABLE {
 		p.db.UpdateStatus(dc_status.DcId, common_proto.DCStatus_UNAVAILABLE)
 		return nil
@@ -39,24 +40,36 @@ func (p *DcMgrHandler) UpdateDataCenter(dc_status *common_proto.DataCenterStatus
 
 	dc := new(common_proto.DataCenterStatus)
 	//dc.Name = dc_status.Name
-	//dc.Id = dc_status.Id
+	dc.DcId = dc_status.DcId
 	dc.DcStatus = dc_status.DcStatus
 	dc.DcHeartbeatReport = dc_status.DcHeartbeatReport
 	dc.GeoLocation = dc_status.GeoLocation
 	dc.DcAttributes = dc_status.DcAttributes
 
+	log.Printf("update datacenterid  %s  updateDataCenter    : %v ", dc_status.DcId, dc)
 
-	datacenter, _ := p.db.Get(dc.DcId)
+	datacenter, _ := p.db.Get(dc_status.DcId)
 
 	if len(datacenter.DcId) == 0 {
 		micro2.WriteLog("error update datacenter failed for datacenterid does not exist")
 		//p.db.Create(dc)
 	}else{
 		micro2.WriteLog("find datacenter, update datacenter")
-		p.db.Update(dc)
+		record := p.GetClusterRecordFromClusterStatus(dc)
+		p.db.Update(record)
 	}
 
 	return nil
+}
+
+func (p *DcMgrHandler)GetClusterRecordFromClusterStatus(cluster *common_proto.DataCenterStatus)*dbservice.DataCenterRecord{
+	record := &dbservice.DataCenterRecord{}
+	record.ClusterName = cluster.DcName
+	record.DcId = cluster.DcId
+	record.DcHeartbeatReport = cluster.DcHeartbeatReport
+	record.GeoLocation = cluster.GeoLocation
+	record.DcAttributes = cluster.DcAttributes
+	return record
 }
 
 func (p *DcMgrHandler) All() error {

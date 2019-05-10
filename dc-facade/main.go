@@ -17,6 +17,7 @@ func init() {
 }
 
 func main() {
+
 	// Register Function as TaskStatusFeedback to update task by data center manager's feedback.
 	sendToDcMgr := micro2.NewPublisher("FromDCFacadeToDCMgr")
 	subscriber := subscriber.New(sendToDcMgr)

@@ -9,15 +9,18 @@ import (
 
 func main() {
     status := common_proto.DataCenterStatus{}
-    status.Status = common_proto.DCStatus_AVAILABLE
+    status.DcStatus = common_proto.DCStatus_AVAILABLE
 
 
 
-    status.Id = "b0c6cba3-d407-41ec-b6e7-c5517d06c4a7"
-    status.Name = "letian datacenter number 1"
+    status.DcId = "5da3c264-6433-4ca4-897a-1d5e5c02cf16"
     status.DcHeartbeatReport = &common_proto.DCHeartbeatReport{}
-    status.DcHeartbeatReport.Report = "123"
-    status.DcHeartbeatReport.Metrics = "11111"
+    status.DcHeartbeatReport.Report = "this is report"
+    status.DcHeartbeatReport.Metrics = "CPU 200 memory 3000"
+
+    status.GeoLocation = &common_proto.GeoLocation{Lng:"lag xxxx", Lat:"22222"}
+    status.DcAttributes = &common_proto.DataCenterAttributes{CreationDate:1234}
+
 
 	event := common_proto.DCStream{
 		OpType:    common_proto.DCOperation_HEARTBEAT,
