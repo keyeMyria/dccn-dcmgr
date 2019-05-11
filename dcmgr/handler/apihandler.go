@@ -6,11 +6,12 @@ import (
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
 	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/google/uuid"
 	"errors"
 	"golang.org/x/net/context"
 	"log"
-
+	"time"
 )
 
 
@@ -120,9 +121,6 @@ func (p *DcMgrAPIHandler) DataCenterList(
 
 	log.Printf("dc %+v ------ %+v", dc, error)
 
-
-
-
 	dataCenterId := uuid.New().String()
 
 
@@ -144,6 +142,13 @@ func (p *DcMgrAPIHandler) DataCenterList(
 		dataCenter.DcStatus = common_proto.DCStatus_REGISTER
 		dataCenter.GeoLocation = &common_proto.GeoLocation{}
 		dataCenter.DcHeartbeatReport = &common_proto.DCHeartbeatReport{}
+		dcAttributes := &common_proto.DataCenterAttributes{}
+		now := time.Now().Unix()
+		dcAttributes.CreationDate = &timestamp.Timestamp{Seconds: now}
+		dcAttributes.LastModifiedDate = &timestamp.Timestamp{Seconds: now}
+		dcAttributes.WalletAddress = ""
+		dataCenter.DcAttributes = dcAttributes
+
 		dataCenter.UserId = uid
 		dataCenter.Clientcert = cert
 		p.db.Create(&dataCenter)
@@ -206,7 +211,7 @@ func (p *DcMgrAPIHandler)GetClusterStatusFromClusterRecord(record *dbservice.Dat
 
 func (p *DcMgrAPIHandler) MyDataCenter(
 	ctx context.Context, req *dcmgr.MyDataCenterRequest) (*common_proto.DataCenterStatus, error) {
-	uid := req.UserId
+	uid := req.Uid
 	record, error := p.db.GetByUserID(uid)
 	cluster := p.GetClusterStatusFromClusterRecord(record)
 	return cluster, error

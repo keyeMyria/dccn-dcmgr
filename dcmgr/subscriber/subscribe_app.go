@@ -26,6 +26,13 @@ func (p *Subscriber) HandlerDeploymentRequestFromTaskMgr(req *common_proto.DCStr
                 return nil
 			}
 		}
+
+		ns := req.GetNamespace()
+		if len (ns.ClusterName) == 0 {
+			service := scheduler.GetSchedulerService()
+			service.AddNamespace(req)
+			return nil
+		}
 		p.dcFacadeDeploy.Publish(req)
 
 		micro2.Printf("send namespace create/update/cancel to  datacenter %+v ", req)

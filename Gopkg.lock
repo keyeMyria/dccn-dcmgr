@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "develop"
-  digest = "1:56d5ae8c7b886c89d8297b5aab74fc941cef52b8fa7a5cfd93b08eb01c32a7aa"
+  digest = "1:67186c70916e6cb9ba3f90d1cd710ce8b4672686ccab755e5fa384a4dbdcf4e1"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -16,7 +16,7 @@
     "protos/dcmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "ac95836e426f27ced4687ea293c676aeff2710cf"
+  revision = "ca801c501d5956188c0a154d6eb2398fb7cdc7d8"
 
 [[projects]]
   branch = "master"
@@ -144,12 +144,12 @@
   version = "v0.5.1"
 
 [[projects]]
-  digest = "1:c839c9a399b78daeff75848565aff9ece9a389e50b77926065b6e504ed088bb5"
+  digest = "1:6b3f1a89eac579ed6582dd77b0a1787047ef83849ad19f460ad5512f24e1544d"
   name = "github.com/hashicorp/memberlist"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a9da52f0668fc4321ec18e9e28dd8141621a808f"
-  version = "v0.1.3"
+  revision = "e1138a6a4d8a6eaec6c919aeae5efbe4d69b1ece"
+  version = "v0.1.4"
 
 [[projects]]
   digest = "1:acc81e4e4289587b257ccdfccbc6eaf16d4c2fb57dda73c6bb349bf50f02501f"
@@ -290,12 +290,12 @@
   version = "v1.1.2"
 
 [[projects]]
-  digest = "1:2e8bdbc8a11d716dab1bf66d326285d7e5c92fa4c996c1574ba1153e57534b85"
+  digest = "1:e5f4d2be19e2ebab13b8e4248792e1841518fd728cd73b042ee4a5630796bb37"
   name = "github.com/oschwald/geoip2-golang"
   packages = ["."]
   pruneopts = "UT"
-  revision = "7118115686e16b77967cdbf55d1b944fe14ad312"
-  version = "v1.2.1"
+  revision = "347ca45869a87337a71b11efe9b3043bc10df97f"
+  version = "v1.3.0"
 
 [[projects]]
   digest = "1:07e8589503b7ec22430dae6eed6f2c17e4249ab245574f4fd0ba8fc9c597d138"
@@ -307,11 +307,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:3bf17a6e6eaa6ad24152148a631d18662f7212e21637c2699bff3369b7f00fa2"
+  digest = "1:89da0f0574bc94cfd0ac8b59af67bf76cdd110d503df2721006b9f0492394333"
   name = "github.com/petar/GoLLRB"
   packages = ["llrb"]
   pruneopts = "UT"
-  revision = "53be0d36a84c2a886ca057d34b6aa4468df9ccb4"
+  revision = "33fb24c13b99c46c93183c291836c573ac382536"
 
 [[projects]]
   digest = "1:cf31692c14422fa27c83a05292eb5cbe0fb2775972e8f1f8446a71549bd8980b"
@@ -346,11 +346,11 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "cbcb750295291b33242907a04be40e80801d0cfc"
+  revision = "22d7a77e9e5f409e934ed268692e56707cd169e5"
 
 [[projects]]
   branch = "master"
-  digest = "1:705b25dc197e3942d74cd2d4134492fc93ea22760ca25048cd20d6ff43d1dadb"
+  digest = "1:1e843b0fd5250f006d9d9a8b476fc3f5d2b529d5b826de61b45150604e075641"
   name = "golang.org/x/net"
   packages = [
     "bpf",
@@ -368,18 +368,18 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "a4d6f7feada510cc50e69a37b484cb0fdc6b7876"
+  revision = "3ec19112720433827bbce8be9342797f5a6aaaf9"
 
 [[projects]]
   branch = "master"
-  digest = "1:646036a04e163f383d101f40e36fd3354676c7dcccc226d825200a6b9509727a"
+  digest = "1:a63ab7381e8941204bf91ce0bbdcb9f47767de756f98209a6a059dcbd52d57b6"
   name = "golang.org/x/sys"
   packages = [
     "unix",
     "windows",
   ]
   pruneopts = "UT"
-  revision = "a5b02f93d862f065920dd6a40dddc66b60d0dec4"
+  revision = "cab07311ab81fc7f180fddf7410b604373b20a00"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -408,11 +408,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:fc5df4cb84cdf639ef702c176a50a9ee08ea3e68ebd67519c0f4f963c7d82978"
+  digest = "1:583a0c80f5e3a9343d33aea4aead1e1afcc0043db66fdf961ddd1fe8cd3a4faf"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "b515fa19cec88c32f305a962f34ae60068947aea"
+  revision = "995ef27e003f584103ecdd0f98e1a0cc9cbf3395"
 
 [[projects]]
   digest = "1:305ae1b02020aa7bd0bf7c51eb20cec7fec7d813c8b37e517ac588963fedd43d"
@@ -483,6 +483,7 @@
     "github.com/Ankr-network/dccn-common/protos/appmgr/v1/grpc",
     "github.com/Ankr-network/dccn-common/protos/common",
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
+    "github.com/golang/protobuf/ptypes/timestamp",
     "github.com/google/uuid",
     "github.com/micro/go-plugins/broker/rabbitmq",
     "github.com/oschwald/geoip2-golang",

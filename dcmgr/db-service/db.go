@@ -3,9 +3,11 @@ package dbservice
 import (
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/protos/common"
+	"github.com/golang/protobuf/ptypes/timestamp"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 	"log"
+	"time"
 )
 
 type DBService interface {
@@ -26,20 +28,20 @@ type DBService interface {
 	// UpdateStatus updates dc item
 	UpdateStatus(clusterID string, status common_proto.DCStatus) error
 
-    UpdateClientCert(clusterID string, clientcert string) error
+	UpdateClientCert(clusterID string, clientcert string) error
 	// Close closes db connection
 	Close()
 }
 
-type DataCenterRecord struct{
-	DcId                 string
-	ClusterName          string
-	GeoLocation          *common_proto.GeoLocation
-	DcStatus               common_proto.DCStatus
-	DcAttributes         *common_proto.DataCenterAttributes
-	DcHeartbeatReport    *common_proto.DCHeartbeatReport
-	UserId                  string
-	Clientcert           string
+type DataCenterRecord struct {
+	DcId              string
+	ClusterName       string
+	GeoLocation       *common_proto.GeoLocation
+	DcStatus          common_proto.DCStatus
+	DcAttributes      *common_proto.DataCenterAttributes
+	DcHeartbeatReport *common_proto.DCHeartbeatReport
+	UserId            string
+	Clientcert        string
 }
 
 // UserDB implements DBService
@@ -81,7 +83,7 @@ func (p *DB) GetByName(name string) (*DataCenterRecord, error) {
 	return &center, err
 }
 
-func (p *DB)GetByUserID(uid string) (*DataCenterRecord, error){
+func (p *DB) GetByUserID(uid string) (*DataCenterRecord, error) {
 	var center DataCenterRecord
 	err := p.collection.Find(bson.M{"userid": uid}).One(&center)
 	return &center, err
@@ -93,53 +95,65 @@ func (p *DB) Create(center *DataCenterRecord) error {
 }
 
 func (p *DB) Reset(clusterID string, datacenter *DataCenterRecord) error {
+	p.setUpdateTime(clusterID)
 	return p.collection.Update(
 		bson.M{"dcid": clusterID},
 		bson.M{"$set": bson.M{
-			"clustername": datacenter.ClusterName,
-			"clientcert": datacenter.Clientcert,
-			"userid" : datacenter.UserId,
-			"dcstatus": datacenter.DcStatus,
-			"dcheartbeatreport":  datacenter.DcHeartbeatReport}})
+			"clustername":       datacenter.ClusterName,
+			"clientcert":        datacenter.Clientcert,
+			"userid":            datacenter.UserId,
+			"dcstatus":          datacenter.DcStatus,
+			"dcheartbeatreport": datacenter.DcHeartbeatReport}})
 }
 
+func (p *DB) setUpdateTime(id string) {
+	now := time.Now().Unix()
+	dataeTime := &timestamp.Timestamp{Seconds: now}
+	p.collection.Update(
+		bson.M{"dcid": id},
+		bson.M{"$set": bson.M{
+			"dcattributes.lastmodifieddate": dataeTime,
+		}})
+
+}
 
 func (p *DB) Update(record *DataCenterRecord) error {
-	if  record.GeoLocation != nil && len(record.GeoLocation.Lat) > 0 {
+	if record.GeoLocation != nil && len(record.GeoLocation.Lat) > 0 {
 		return p.UpdateWithGEO(record)
-	}else{
+	} else {
 		return p.UpdateWithoutGEO(record)
 	}
 }
 
 func (p *DB) UpdateWithGEO(record *DataCenterRecord) error {
-	log.Printf("UpdateWithGEO---------> %+v \n", record)
+	//log.Printf("UpdateWithGEO---------> %+v \n", record)
+	p.setUpdateTime(record.DcId)
 	return p.collection.Update(
 		bson.M{"dcid": record.DcId},
 		bson.M{"$set": bson.M{
-			"dcstatus": record.DcStatus,
-			"geolocation" : record.GeoLocation,
-			"dcheartbeatreport":  record.DcHeartbeatReport,
-            }})
+			"dcstatus":          record.DcStatus,
+			"geolocation":       record.GeoLocation,
+			"dcheartbeatreport": record.DcHeartbeatReport,
+		}})
 }
 
 func (p *DB) UpdateWithoutGEO(record *DataCenterRecord) error {
-	log.Printf("UpdateWithoutGEO---------> %+v \n", record)
+	//log.Printf("UpdateWithoutGEO---------> %+v \n", record)
+	p.setUpdateTime(record.DcId)
 	return p.collection.Update(
 		bson.M{"dcid": record.DcId},
 		bson.M{"$set": bson.M{
-			"dcstatus": record.DcStatus,
-			"dcheartbeatreport":  record.DcHeartbeatReport,
-			}})
+			"dcstatus":          record.DcStatus,
+			"dcheartbeatreport": record.DcHeartbeatReport,
+		}})
 }
-
 
 // Update updates user item.
 func (p *DB) UpdateName(id string, name string) error {
 	return p.collection.Update(
 		bson.M{"dcid": id},
 		bson.M{"$set": bson.M{
-			"clustername":  name}})
+			"clustername": name}})
 }
 
 func (p *DB) UpdateStatus(clusterID string, status common_proto.DCStatus) error {
@@ -164,10 +178,9 @@ func (p *DB) GetAll() (*[]*DataCenterRecord, error) {
 	return &dcs, nil
 }
 
-
 func (p *DB) GetAvaliableList() (*[]*DataCenterRecord, error) {
 	var dcs []*DataCenterRecord
-	if err := p.collection.Find(bson.M{"dcstatus" : common_proto.DCStatus_AVAILABLE}).All(&dcs); err != nil {
+	if err := p.collection.Find(bson.M{"dcstatus": common_proto.DCStatus_AVAILABLE}).All(&dcs); err != nil {
 		return nil, err
 	}
 

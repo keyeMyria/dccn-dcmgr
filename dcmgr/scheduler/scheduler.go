@@ -58,6 +58,20 @@ func (s *SchedulerService) AddTask(task *TaskRecord) {
 }
 
 func (s *SchedulerService) AddNamespace(req *common_proto.DCStream) {
+	ns := req.GetNamespace()
+
+	if len(ns.ClusterName) == 0 {
+		ns.ClusterName = s.GetDatacenterName(ns.ClusterId)
+		event := common_proto.DCStream{
+			OpType:    common_proto.DCOperation_NS_CREATE,
+			OpPayload: &common_proto.DCStream_Namespace{Namespace: ns},
+		}
+		log.Printf("send namespace after update cluster name msg to %s , %+v", ns.NsName, ns)
+		s.publisher.Publish(&event)
+		return
+	}
+
+
 	dcs, _ := s.db.GetAvaliableList()
 	if len(*dcs) > 0 {
 		dc := (*dcs)[0]
@@ -137,7 +151,7 @@ func (s *SchedulerService) SendTaskToDataCenter(datacenterID string, task *TaskR
 		s.publisher.Publish(task.Msg) // no need add clusterid
 	} else {
 		appDeployment.Namespace.ClusterId = datacenterID
-		appDeployment.Namespace.ClusterName = s.getDatacenterName(datacenterID)
+		appDeployment.Namespace.ClusterName = s.GetDatacenterName(datacenterID)
 		event := common_proto.DCStream{
 			OpType:    common_proto.DCOperation_APP_CREATE,
 			OpPayload: &common_proto.DCStream_AppDeployment{AppDeployment: appDeployment},
@@ -150,7 +164,7 @@ func (s *SchedulerService) SendTaskToDataCenter(datacenterID string, task *TaskR
 		appDeployment.Namespace.ClusterId, appDeployment.Namespace.ClusterName)
 }
 
-func (s *SchedulerService) getDatacenterName(datacenterId string) string {
+func (s *SchedulerService) GetDatacenterName(datacenterId string) string {
 	record, err := s.db.Get(datacenterId)
 	log.Printf("hello %+v \n", record)
 	if err != nil {
