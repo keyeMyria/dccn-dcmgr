@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"errors"
 	"log"
 	"time"
 
@@ -10,6 +11,7 @@ import (
 	ankr_default "github.com/Ankr-network/dccn-common/protos"
 	common_proto "github.com/Ankr-network/dccn-common/protos/common"
 	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
+
 )
 
 type Relay struct {
@@ -50,6 +52,11 @@ func (p *Relay)CreateApp(req *common_proto.DCStream) (err error){
 	namespaceEvent := &common_proto.DCStream{
 		OpType:    common_proto.DCOperation_NS_CREATE,
 		OpPayload: namespaceReport,
+	}
+
+	if app.Namespace == nil || len(app.Namespace.ClusterId) == 0 {
+		micro2.WriteLog("namespace is nil or ClusterId is empty when UpdateCancelDetailApp")
+		return errors.New("namespace or ClusterId is empty is nil")
 	}
 
 	conn, err := pgrpc.Dial(app.Namespace.ClusterId)
@@ -96,6 +103,11 @@ func (p *Relay)UpdateCancelDetailApp(req *common_proto.DCStream) (err error){
 	appEvent := &common_proto.DCStream{
 		OpType:    req.OpType,
 		OpPayload: appReport,
+	}
+
+	if app.Namespace == nil {
+		micro2.WriteLog("namespace is nil when UpdateCancelDetailApp")
+		return errors.New("namespace is nil")
 	}
 
 	switch req.OpType {
@@ -181,6 +193,13 @@ func (p *Relay)NamespaceProcess(req *common_proto.DCStream) (err error){
 	namespaceEvent := &common_proto.DCStream{
 		OpType:    req.OpType,
 		OpPayload: namespaceReport,
+	}
+
+
+
+	if ns == nil || len(ns.ClusterId) == 0 {
+		micro2.WriteLog("namespace  is nil or namespace.ClusterId empty when NamespaceProcess")
+		return errors.New("namespace is nil or namespace.ClusterId empty ")
 	}
 
 	switch req.OpType {

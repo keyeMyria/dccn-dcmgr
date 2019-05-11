@@ -46,11 +46,13 @@ func main() {
 	defer cancel()
 
 	// var userTasks []*common_proto.Task
-	if rsp, err := dcClient.RegisterDataCenter(tokenContext, &dcmgr.RegisterDataCenterRequest{UserId:"xxxx123", ClusterName:"demo-cluster"}); err != nil {
+	if rsp, err := dcClient.RegisterDataCenter(tokenContext, &dcmgr.RegisterDataCenterRequest{UserId:"admin", ClusterName:"stage-cluster-new"}); err != nil {
 		log.Fatal(err.Error())
 	} else {
 
-		fmt.Printf("RegisterDataCenter response %+v", rsp)
+		fmt.Printf("key \n%s\n", rsp.ClientKey)
+		fmt.Printf("\n%s\n", rsp.ClientCsrCert)
+		fmt.Printf("ca->  \n%s\n", rsp.CaCert)
 
 	}
 	//}

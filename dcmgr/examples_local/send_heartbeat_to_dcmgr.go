@@ -13,13 +13,13 @@ func main() {
 
 
 
-    status.DcId = "5da3c264-6433-4ca4-897a-1d5e5c02cf16"
+    status.DcId = "bb339361-e698-4d39-bf33-bbb2c7a8c308"
     status.DcHeartbeatReport = &common_proto.DCHeartbeatReport{}
     status.DcHeartbeatReport.Report = "this is report"
     status.DcHeartbeatReport.Metrics = "CPU 200 memory 3000"
 
-    status.GeoLocation = &common_proto.GeoLocation{Lng:"lag xxxx", Lat:"22222"}
-    status.DcAttributes = &common_proto.DataCenterAttributes{CreationDate:1234}
+    status.GeoLocation = &common_proto.GeoLocation{Lng:"9999", Lat:"8888"}
+
 
 
 	event := common_proto.DCStream{
