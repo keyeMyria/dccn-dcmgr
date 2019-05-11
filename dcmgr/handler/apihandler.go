@@ -95,7 +95,12 @@ func (p *DcMgrAPIHandler) DataCenterList(
 	} else {
 		log.Printf("DataCenterList successfully count: %d", len(*list))
 		rsp := dcmgr.DataCenterListResponse{}
-		rsp.DcList = *list
+		rsp.DcList = make([]*common_proto.DataCenterStatus, 0)
+
+		for _, record :=range *list {
+			cluster := p.GetClusterStatusFromClusterRecord(record)
+			rsp.DcList = append(rsp.DcList, cluster)
+		}
 		return &rsp, nil
 	}
 }
@@ -187,12 +192,24 @@ func (p *DcMgrAPIHandler) ResetDataCenter(
 	return &rsp, nil
 }
 
+func (p *DcMgrAPIHandler)GetClusterStatusFromClusterRecord(record *dbservice.DataCenterRecord)*common_proto.DataCenterStatus{
+	cluster := &common_proto.DataCenterStatus{}
+	cluster.DcName = record.ClusterName
+	cluster.DcId = record.DcId
+	cluster.DcStatus = record.DcStatus
+	cluster.DcHeartbeatReport = record.DcHeartbeatReport
+	cluster.GeoLocation = record.GeoLocation
+	cluster.DcAttributes = record.DcAttributes
+	return cluster
+}
+
 
 func (p *DcMgrAPIHandler) MyDataCenter(
 	ctx context.Context, req *dcmgr.MyDataCenterRequest) (*common_proto.DataCenterStatus, error) {
 	uid := req.UserId
-	dc, error := p.db.GetByUserID(uid)
-	return dc, error
+	record, error := p.db.GetByUserID(uid)
+	cluster := p.GetClusterStatusFromClusterRecord(record)
+	return cluster, error
 }
 
 

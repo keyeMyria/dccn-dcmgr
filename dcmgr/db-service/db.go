@@ -5,23 +5,24 @@ import (
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
+	"log"
 )
 
 type DBService interface {
 	// Get gets a dc item by pb's id.
-	Get(id string) (*common_proto.DataCenterStatus, error)
+	Get(id string) (*DataCenterRecord, error)
 	// Get gets a dc item by pb's name.
-	GetByName(name string) (*common_proto.DataCenterStatus, error)
-	GetByUserID(uid string) (*common_proto.DataCenterStatus, error)
+	GetByName(name string) (*DataCenterRecord, error)
+	GetByUserID(uid string) (*DataCenterRecord, error)
 	GetByID(id string) (*DataCenterRecord, error)
 	// Create Creates a new dc item if not exits.
 	Create(center *DataCenterRecord) error
 	Reset(clusterID string, center *DataCenterRecord) error
 	// GetAll gets all task related to user id.
-	GetAll() (*[]*common_proto.DataCenterStatus, error)
-	GetAvaliableList() (*[]*common_proto.DataCenterStatus, error)
+	GetAll() (*[]*DataCenterRecord, error)
+	GetAvaliableList() (*[]*DataCenterRecord, error)
 	// Update updates dc item
-	Update(center *common_proto.DataCenterStatus) error
+	Update(center *DataCenterRecord) error
 	// UpdateStatus updates dc item
 	UpdateStatus(clusterID string, status common_proto.DCStatus) error
 
@@ -59,8 +60,9 @@ func (p *DB) Close() {
 }
 
 // Get gets user item by id.
-func (p *DB) Get(id string) (*common_proto.DataCenterStatus, error) {
-	var center common_proto.DataCenterStatus
+func (p *DB) Get(id string) (*DataCenterRecord, error) {
+	var center DataCenterRecord
+	log.Printf("get datacetner %s \n", id)
 	err := p.collection.Find(bson.M{"dcid": id}).One(&center)
 	return &center, err
 }
@@ -73,14 +75,14 @@ func (p *DB) GetByID(id string) (*DataCenterRecord, error) {
 }
 
 // Get gets user item by name.
-func (p *DB) GetByName(name string) (*common_proto.DataCenterStatus, error) {
-	var center common_proto.DataCenterStatus
+func (p *DB) GetByName(name string) (*DataCenterRecord, error) {
+	var center DataCenterRecord
 	err := p.collection.Find(bson.M{"clustername": name}).One(&center)
 	return &center, err
 }
 
-func (p *DB)GetByUserID(uid string) (*common_proto.DataCenterStatus, error){
-	var center common_proto.DataCenterStatus
+func (p *DB)GetByUserID(uid string) (*DataCenterRecord, error){
+	var center DataCenterRecord
 	err := p.collection.Find(bson.M{"userid": uid}).One(&center)
 	return &center, err
 }
@@ -98,32 +100,53 @@ func (p *DB) Reset(clusterID string, datacenter *DataCenterRecord) error {
 			"clientcert": datacenter.Clientcert,
 			"userid" : datacenter.UserId,
 			"dcstatus": datacenter.DcStatus,
-			"Report":  datacenter.DcHeartbeatReport.Report,
-			"Metrics": datacenter.DcHeartbeatReport.Metrics}})
+			"dcheartbeatreport":  datacenter.DcHeartbeatReport}})
 }
 
 
-func (p *DB) Update(datacenter *common_proto.DataCenterStatus) error {
+func (p *DB) Update(record *DataCenterRecord) error {
+	if  record.GeoLocation != nil && len(record.GeoLocation.Lat) > 0 {
+		return p.UpdateWithGEO(record)
+	}else{
+		return p.UpdateWithoutGEO(record)
+	}
+}
+
+func (p *DB) UpdateWithGEO(record *DataCenterRecord) error {
+	log.Printf("UpdateWithGEO---------> %+v \n", record)
 	return p.collection.Update(
-		bson.M{"dcid": datacenter.DcId},
+		bson.M{"dcid": record.DcId},
 		bson.M{"$set": bson.M{
-			"dcstatus": datacenter.DcStatus,
-			"Report":  datacenter.DcHeartbeatReport.Report,
-			"Metrics": datacenter.DcHeartbeatReport.Metrics}})
+			"dcstatus": record.DcStatus,
+			"geolocation" : record.GeoLocation,
+			"dcheartbeatreport":  record.DcHeartbeatReport,
+            }})
 }
+
+func (p *DB) UpdateWithoutGEO(record *DataCenterRecord) error {
+	log.Printf("UpdateWithoutGEO---------> %+v \n", record)
+	return p.collection.Update(
+		bson.M{"dcid": record.DcId},
+		bson.M{"$set": bson.M{
+			"dcstatus": record.DcStatus,
+			"dcheartbeatreport":  record.DcHeartbeatReport,
+			}})
+}
+
 
 // Update updates user item.
 func (p *DB) UpdateName(id string, name string) error {
 	return p.collection.Update(
 		bson.M{"dcid": id},
 		bson.M{"$set": bson.M{
-			"Name":  name}})
+			"clustername":  name}})
 }
 
 func (p *DB) UpdateStatus(clusterID string, status common_proto.DCStatus) error {
+	log.Printf("update UpdateStatus %s %s \n", clusterID, status)
 	return p.collection.Update(
 		bson.M{"dcid": clusterID},
-		bson.M{"$set": bson.M{"status": status}})
+		bson.M{"$set": bson.M{"dcstatus": status}})
 }
 
 func (p *DB) UpdateClientCert(clusterID string, clientcert string) error {
@@ -132,8 +155,8 @@ func (p *DB) UpdateClientCert(clusterID string, clientcert string) error {
 		bson.M{"$set": bson.M{"clientcert": clientcert}})
 }
 
-func (p *DB) GetAll() (*[]*common_proto.DataCenterStatus, error) {
-	var dcs []*common_proto.DataCenterStatus
+func (p *DB) GetAll() (*[]*DataCenterRecord, error) {
+	var dcs []*DataCenterRecord
 	if err := p.collection.Find(bson.M{}).All(&dcs); err != nil {
 		return nil, err
 	}
@@ -142,8 +165,8 @@ func (p *DB) GetAll() (*[]*common_proto.DataCenterStatus, error) {
 }
 
 
-func (p *DB) GetAvaliableList() (*[]*common_proto.DataCenterStatus, error) {
-	var dcs []*common_proto.DataCenterStatus
+func (p *DB) GetAvaliableList() (*[]*DataCenterRecord, error) {
+	var dcs []*DataCenterRecord
 	if err := p.collection.Find(bson.M{"dcstatus" : common_proto.DCStatus_AVAILABLE}).All(&dcs); err != nil {
 		return nil, err
 	}

@@ -3,7 +3,7 @@
 
 [[projects]]
   branch = "develop"
-  digest = "1:6ce65bcbe1fc74434f5dcad3021422c41867fe86323ea571a8558821baca1e27"
+  digest = "1:56d5ae8c7b886c89d8297b5aab74fc941cef52b8fa7a5cfd93b08eb01c32a7aa"
   name = "github.com/Ankr-network/dccn-common"
   packages = [
     "ankr-micro",
@@ -16,7 +16,7 @@
     "protos/dcmgr/v1/grpc",
   ]
   pruneopts = "UT"
-  revision = "7462ed67577ee16a3a3a555e9b705b23bb428dbb"
+  revision = "ac95836e426f27ced4687ea293c676aeff2710cf"
 
 [[projects]]
   branch = "master"
@@ -290,6 +290,22 @@
   version = "v1.1.2"
 
 [[projects]]
+  digest = "1:2e8bdbc8a11d716dab1bf66d326285d7e5c92fa4c996c1574ba1153e57534b85"
+  name = "github.com/oschwald/geoip2-golang"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "7118115686e16b77967cdbf55d1b944fe14ad312"
+  version = "v1.2.1"
+
+[[projects]]
+  digest = "1:07e8589503b7ec22430dae6eed6f2c17e4249ab245574f4fd0ba8fc9c597d138"
+  name = "github.com/oschwald/maxminddb-golang"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "c5bec84d1963260297932a1b7a1753c8420717a7"
+  version = "v1.3.0"
+
+[[projects]]
   branch = "master"
   digest = "1:3bf17a6e6eaa6ad24152148a631d18662f7212e21637c2699bff3369b7f00fa2"
   name = "github.com/petar/GoLLRB"
@@ -330,7 +346,7 @@
     "ed25519/internal/edwards25519",
   ]
   pruneopts = "UT"
-  revision = "e1dfcc566284e143ba8f9afbb3fa563f2a0d212b"
+  revision = "cbcb750295291b33242907a04be40e80801d0cfc"
 
 [[projects]]
   branch = "master"
@@ -352,15 +368,18 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "f4e77d36d62c17c2336347bb2670ddbd02d092b7"
+  revision = "a4d6f7feada510cc50e69a37b484cb0fdc6b7876"
 
 [[projects]]
   branch = "master"
-  digest = "1:4fc43e824f7e546353de724c00507b1d9c0bab56344b10c2330a97f166a0fba7"
+  digest = "1:646036a04e163f383d101f40e36fd3354676c7dcccc226d825200a6b9509727a"
   name = "golang.org/x/sys"
-  packages = ["unix"]
+  packages = [
+    "unix",
+    "windows",
+  ]
   pruneopts = "UT"
-  revision = "2d0786266e9cd132da844109aa05016f11f3df28"
+  revision = "a5b02f93d862f065920dd6a40dddc66b60d0dec4"
 
 [[projects]]
   digest = "1:8d8faad6b12a3a4c819a3f9618cb6ee1fa1cfc33253abeeea8b55336721e3405"
@@ -466,6 +485,7 @@
     "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc",
     "github.com/google/uuid",
     "github.com/micro/go-plugins/broker/rabbitmq",
+    "github.com/oschwald/geoip2-golang",
     "golang.org/x/net/context",
     "google.golang.org/grpc",
     "google.golang.org/grpc/credentials",
