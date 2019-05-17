@@ -2,6 +2,7 @@ package handler
 
 import (
 	"context"
+	"github.com/Ankr-network/dccn-dcmgr/dc-facade/geo"
 	"log"
 	"sync"
 	"time"
@@ -9,10 +10,9 @@ import (
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
 	"github.com/Ankr-network/dccn-common/cert/sign"
 	"github.com/Ankr-network/dccn-common/pgrpc"
-	common_proto "github.com/Ankr-network/dccn-common/protos/common"
-	dcmgr "github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
-	geo "github.com/Ankr-network/dccn-dcmgr/dc-facade/geo"
-	dbservice "github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
+	"github.com/Ankr-network/dccn-common/protos/common"
+	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
+	"github.com/Ankr-network/dccn-dcmgr/dcmgr/db-service"
 	"google.golang.org/grpc"
 )
 
@@ -69,6 +69,18 @@ func (p *HeartBeat) CheckEachDatacenterConnections(ipCache *sync.Map) {
 	})
 }
 
+func (p *HeartBeat)SendDataCenterUnavailable(key string){
+	p.taskFeedback.Publish(&common_proto.DCStream{
+		OpType: common_proto.DCOperation_HEARTBEAT,
+		OpPayload: &common_proto.DCStream_DataCenter{
+			DataCenter: &common_proto.DataCenterStatus{
+				DcId:     key,
+				DcStatus: common_proto.DCStatus_UNAVAILABLE,
+			},
+		},
+	})
+}
+
 func (p *HeartBeat) CheckDatacenterConnectionOK(key, ip string, conn *grpc.ClientConn, err error) (*common_proto.DataCenterStatus, bool) {
 	if err != nil {
 		log.Println(err)
@@ -87,6 +99,7 @@ func (p *HeartBeat) CheckDatacenterConnectionOK(key, ip string, conn *grpc.Clien
 	rsp, err := dcmgr.NewDCClient(conn).Overview(ctx, &dcmgr.DCOverviewRequest{Timestamp: timestampStr})
 	if err != nil {
 		log.Println(err)
+		p.SendDataCenterUnavailable(key)
 		return nil, false
 	}
 
@@ -105,16 +118,25 @@ func (p *HeartBeat) CheckDatacenterConnectionOK(key, ip string, conn *grpc.Clien
 	// update status into db
 	if rsp.ClusterId == "" {
 		log.Printf("error for datacenter id does not exist")
+		p.SendDataCenterUnavailable(key)
 		return nil, false
 	}
 
-	lat, lang, country := geo.ReadIPinfo(ip)
-	log.Printf("%s %s %s ", lat, lang, country)
-	location := common_proto.GeoLocation{}
-	location.Lat = lat
-	location.Lng = lang
-	location.Country = country
-	rsp.Status.GeoLocation = &location
+	// if database does not have lat lng will update once
+	if status.GeoLocation == nil || len(status.GeoLocation.Lat) == 0 {
+		lat, lang, country := geo.GetLatLng(ip)
+		log.Printf("key %s  cluster_id %s  ip  %s >> %s %s %s ", key, dcID , ip,  lat, lang, country)
+		location := common_proto.GeoLocation{}
+		location.Lat = lat
+		location.Lng = lang
+		location.Country = country
+		rsp.Status.GeoLocation = &location
+	}else{
+		// this empty value will not update to database
+		rsp.Status.GeoLocation = &common_proto.GeoLocation{Lat:"", Lng:"", Country:""}
+	}
+
+
 
 	return rsp.Status, true
 }

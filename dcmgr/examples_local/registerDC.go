@@ -10,7 +10,7 @@ import (
 	"google.golang.org/grpc/metadata"
 )
 
-var addr = "localhost:50051"
+var addr = "localhost:50052"
 
 //var addr = "client-dev.dccn.ankr.com:50051"
 
