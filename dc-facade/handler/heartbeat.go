@@ -8,7 +8,6 @@ import (
 	"time"
 
 	micro2 "github.com/Ankr-network/dccn-common/ankr-micro"
-	"github.com/Ankr-network/dccn-common/cert/sign"
 	"github.com/Ankr-network/dccn-common/pgrpc"
 	"github.com/Ankr-network/dccn-common/protos/common"
 	"github.com/Ankr-network/dccn-common/protos/dcmgr/v1/grpc"
@@ -106,13 +105,13 @@ func (p *HeartBeat) CheckDatacenterConnectionOK(key, ip string, conn *grpc.Clien
 	dcID := rsp.ClusterId
 	status, _ := p.db.GetByID(dcID)
 
-	client_cert := status.Clientcert
+	//client_cert := status.Clientcert
 
-	if sign.RsaVerify(client_cert, timestampStr, rsp.Signature) {
-		log.Printf("pass RsaVerify  timestampStr  %s %s %s  \n", client_cert, timestampStr, rsp.Signature)
-	} else {
-		log.Printf("not pass RsaVerify \n")
-	}
+	//if sign.EcdsaVerify(client_cert, timestampStr, rsp.Signature) {
+	//	log.Printf("pass RsaVerify  timestampStr  %s %s %s  \n", client_cert, timestampStr, rsp.Signature)
+	//} else {
+	//	log.Printf("not pass RsaVerify \n")
+	//}
 
 	// FIXME: transaction
 	// update status into db
